@@ -1,0 +1,430 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// User & Authentication
+// ==========================================
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  isActive     Boolean  @default(true)
+
+  roles UserRole[]
+
+  // Relations
+  authoredSubmissions   Submission[]           @relation("AuthorToSubmission")
+  handlingSubmissions   Submission[]           @relation("EditorToSubmission")
+  reviews               ReviewerAssignment[]
+  auditLogs             AuditLog[]
+  messagesSent          Message[]              @relation("MessageSender")
+  messagesReceived      Message[]              @relation("MessageReceiver")
+  uploadedFiles         SubmissionFile[]
+  sectionAssignments    SectionEditor[]
+  editorialDecisions    EditorialDecision[]
+  notifications         Notification[]
+  copyeditorAssignments CopyeditorAssignment[]
+  productionAssignments ProductionAssignment[] @relation("ProductionEditorAssignments")
+}
+
+enum Role {
+  ADMIN
+  JOURNAL_MANAGER
+  EDITOR
+  SECTION_EDITOR
+  REVIEWER
+  AUTHOR
+  COPYEDITOR
+  PRODUCTION_EDITOR
+  READER
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  role   Role
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@index([role])
+}
+
+model RolePermission {
+  id         String @id @default(cuid())
+  role       Role
+  permission String
+
+  @@unique([role, permission])
+}
+
+// ==========================================
+// Settings & Journal Branding
+// ==========================================
+
+model JournalSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model WebsiteContent {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  content     String   @db.Text
+  isPublished Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+}
+
+// ==========================================
+// Submissions
+// ==========================================
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  INITIAL_SCREENING
+  DESK_REJECTED
+  UNDER_REVIEW
+  REVIEWS_COMPLETED
+  REVISION_REQUIRED
+  REVISION_SUBMITTED
+  ACCEPTED
+  REJECTED
+  COPYEDITING
+  PRODUCTION
+  PENDING_FINAL_APPROVAL
+  PRODUCTION_CORRECTIONS_REQUIRED
+  SCHEDULED
+  PUBLISHED
+}
+
+model Section {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String? @db.Text
+  status      Boolean @default(true) // true = active, false = inactive
+
+  submissions Submission[]
+  editors     SectionEditor[]
+}
+
+model SectionEditor {
+  id        String @id @default(cuid())
+  sectionId String
+  userId    String
+
+  section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sectionId, userId])
+}
+
+model Submission {
+  id           String           @id @default(cuid())
+  submissionId String           @unique // e.g., "JMAS-2026-0001"
+  title        String           @db.Text
+  abstract     String?          @db.Text
+  keywords     String?
+  status       SubmissionStatus @default(DRAFT)
+  currentStep  Int              @default(1) // For the 5-step wizard
+
+  authorId String
+  author   User   @relation("AuthorToSubmission", fields: [authorId], references: [id])
+
+  handlingEditorId String?
+  handlingEditor   User?   @relation("EditorToSubmission", fields: [handlingEditorId], references: [id])
+
+  sectionId String?
+  section   Section? @relation(fields: [sectionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  coAuthors             CoAuthor[]
+  files                 SubmissionFile[]
+  reviewerAssignments   ReviewerAssignment[]
+  revisions             Revision[]
+  auditLogs             AuditLog[]
+  messages              Message[]
+  decisions             EditorialDecision[]
+  notifications         Notification[]
+  publishedArticle      PublishedArticle?
+  copyeditorAssignments CopyeditorAssignment[]
+  productionAssignments ProductionAssignment[]
+
+  @@index([authorId])
+  @@index([status])
+  @@index([handlingEditorId])
+  @@index([sectionId])
+  @@index([updatedAt])
+}
+
+model CoAuthor {
+  id              String  @id @default(cuid())
+  submissionId    String
+  firstName       String
+  lastName        String
+  email           String
+  affiliation     String
+  country         String?
+  isCorresponding Boolean @default(false)
+  order           Int
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+}
+
+enum FileType {
+  MANUSCRIPT
+  FIGURE
+  TABLE
+  SUPPLEMENTARY
+  RESEARCH_DATA
+  REVIEWER_REPORT
+  REVISION_RESPONSE
+  COPYEDITED_FILE
+  PRODUCTION_READY_PDF
+  PRODUCTION_READY_HTML
+}
+
+model SubmissionFile {
+  id           String   @id @default(cuid())
+  submissionId String
+  uploaderId   String
+  type         FileType
+  url          String
+  originalName String
+  mimeType     String
+  size         Int
+  version      Int      @default(1)
+  createdAt    DateTime @default(now())
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  uploader   User       @relation(fields: [uploaderId], references: [id])
+
+  @@index([submissionId, type])
+}
+
+// ==========================================
+// Peer Review & Decisions
+// ==========================================
+
+enum ReviewStatus {
+  INVITED
+  ACCEPTED
+  DECLINED
+  SUBMITTED
+  OVERDUE
+}
+
+enum Recommendation {
+  ACCEPT
+  MINOR_REVISION
+  MAJOR_REVISION
+  REJECT
+}
+
+enum DecisionType {
+  ACCEPT
+  MINOR_REVISION
+  MAJOR_REVISION
+  REJECT
+  DESK_REJECT
+}
+
+model ReviewerAssignment {
+  id                String          @id @default(cuid())
+  submissionId      String
+  reviewerId        String
+  status            ReviewStatus    @default(INVITED)
+  dueDate           DateTime?
+  recommendation    Recommendation?
+  commentsForAuthor String?         @db.Text
+  commentsForEditor String?         @db.Text
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  submittedAt       DateTime?
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  reviewer   User       @relation(fields: [reviewerId], references: [id])
+
+  @@index([reviewerId, status])
+  @@index([submissionId])
+}
+
+model EditorialDecision {
+  id                String       @id @default(cuid())
+  submissionId      String
+  editorId          String
+  decision          DecisionType
+  commentsForAuthor String?      @db.Text
+  internalComments  String?      @db.Text
+  createdAt         DateTime     @default(now())
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  editor     User       @relation(fields: [editorId], references: [id])
+}
+
+model CopyeditorAssignment {
+  id           String    @id @default(cuid())
+  submissionId String
+  copyeditorId String
+  status       String    @default("ASSIGNED") // "ASSIGNED", "IN_PROGRESS", "COMPLETED"
+  assignedAt   DateTime  @default(now())
+  dueDate      DateTime?
+  completedAt  DateTime?
+  notes        String?   @db.Text
+  checklist    Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  copyeditor User       @relation(fields: [copyeditorId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, copyeditorId])
+  @@index([copyeditorId, status])
+  @@index([submissionId])
+}
+
+model ProductionAssignment {
+  id                 String    @id @default(cuid())
+  submissionId       String
+  productionEditorId String
+  status             String    @default("ASSIGNED") // "ASSIGNED", "IN_PROGRESS", "COMPLETED"
+  assignedAt         DateTime  @default(now())
+  dueDate            DateTime?
+  completedAt        DateTime?
+  notes              String?   @db.Text
+  checklist          Json?
+  metadata           Json?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  submission       Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  productionEditor User       @relation("ProductionEditorAssignments", fields: [productionEditorId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, productionEditorId])
+  @@index([productionEditorId, status])
+  @@index([submissionId])
+}
+
+model Revision {
+  id                  String   @id @default(cuid())
+  submissionId        String
+  versionNumber       Int
+  responseToReviewers String?  @db.Text
+  createdAt           DateTime @default(now())
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// Issues & Publishing
+// ==========================================
+
+enum IssueStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Issue {
+  id          String      @id @default(cuid())
+  volume      Int
+  issueNumber Int
+  year        Int
+  description String?     @db.Text
+  coverImage  String?
+  status      IssueStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  articles PublishedArticle[]
+
+  @@index([status, publishedAt])
+}
+
+model PublishedArticle {
+  id           String   @id @default(cuid())
+  submissionId String   @unique
+  issueId      String
+  doi          String?  @unique
+  pageRange    String?
+  publishedAt  DateTime @default(now())
+  views        Int      @default(0)
+  downloads    Int      @default(0)
+
+  submission Submission @relation(fields: [submissionId], references: [id])
+  issue      Issue      @relation(fields: [issueId], references: [id])
+
+  @@index([issueId])
+  @@index([publishedAt])
+}
+
+// ==========================================
+// Communication & Auditing
+// ==========================================
+
+model Message {
+  id           String   @id @default(cuid())
+  submissionId String
+  senderId     String
+  receiverId   String?
+  subject      String?
+  content      String   @db.Text
+  createdAt    DateTime @default(now())
+  isRead       Boolean  @default(false)
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  sender     User       @relation("MessageSender", fields: [senderId], references: [id])
+  receiver   User?      @relation("MessageReceiver", fields: [receiverId], references: [id])
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  userId       String?
+  submissionId String?
+  action       String
+  details      String?  @db.Text
+  createdAt    DateTime @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  submission Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id           String   @id @default(cuid())
+  userId       String
+  submissionId String?
+  title        String
+  message      String   @db.Text
+  isRead       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submission Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([submissionId])
+}

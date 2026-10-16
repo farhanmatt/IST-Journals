@@ -1,0 +1,1 @@
+const { PrismaClient } = require("@prisma/client"); const prisma = new PrismaClient(); async function main() { const logs = await prisma.$queryRawUnsafe("SELECT * FROM \"AuditLog\" ORDER BY \"createdAt\" DESC LIMIT 5"); console.log(logs); } main();
