@@ -3,7 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { getEditorialTeam, searchUsersForTeam, addEditorialRole, removeEditorialRole } from "./actions";
 import { Users, Search, Plus, Trash2, UserPlus, Shield, Mail, CheckCircle2, AlertCircle } from "lucide-react";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/client";
 import { useConfirm } from "@/components/ui/ConfirmDialog";
 
 type TeamMember = {
