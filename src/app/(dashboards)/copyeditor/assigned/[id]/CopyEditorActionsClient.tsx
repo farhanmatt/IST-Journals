@@ -503,7 +503,7 @@ export function CopyEditorActionsClient({
             <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-700 space-y-1">
               <p>• Completed Checklist Items: <strong>{completedChecklistCount}/{CHECKLIST_ITEMS.length}</strong></p>
               <p>• Uploaded Edited Files: <strong>{existingCopyeditedFiles.length} file(s)</strong></p>
-              {notes && <p className="italic text-slate-500 truncate">• Notes: "{notes}"</p>}
+              {notes && <p className="italic text-slate-500 truncate">• Notes: &quot;{notes}&quot;</p>}
             </div>
 
             <div className="flex justify-end gap-2 pt-2">

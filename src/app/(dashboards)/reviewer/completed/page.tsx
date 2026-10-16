@@ -71,7 +71,7 @@ export default async function CompletedReviewsPage() {
             </div>
             <h3 className="text-base font-bold text-slate-900 mb-1">No completed reviews</h3>
             <p className="text-slate-500 text-xs sm:text-sm max-w-sm mx-auto leading-relaxed">
-              You haven't submitted any reviews yet. Assigned manuscripts will appear in your Active Reviews list.
+              You haven&apos;t submitted any reviews yet. Assigned manuscripts will appear in your Active Reviews list.
             </p>
           </div>
         )}

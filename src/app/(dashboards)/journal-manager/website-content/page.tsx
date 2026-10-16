@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 export default async function WebsiteContentPage() {
   const defaultPages = [
     { slug: "about", title: "About the Journal" },
@@ -13,10 +15,11 @@ export default async function WebsiteContentPage() {
 
   // Ensure defaults exist
   for (const p of defaultPages) {
-    const exists = await prisma.websiteContent.findUnique({ where: { slug: p.slug } });
-    if (!exists) {
-      await prisma.websiteContent.create({ data: { slug: p.slug, title: p.title, content: "" } });
-    }
+    await prisma.websiteContent.upsert({
+      where: { slug: p.slug },
+      update: {},
+      create: { slug: p.slug, title: p.title, content: "" }
+    }).catch(() => {});
   }
 
   const pages = await prisma.websiteContent.findMany({ orderBy: { title: "asc" } });

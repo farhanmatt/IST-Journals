@@ -75,7 +75,7 @@ export default async function DraftsPage() {
                       </div>
                       <p className="text-slate-900 font-bold text-sm">No drafts found</p>
                       <p className="text-slate-500 text-xs max-w-sm leading-relaxed">
-                        You have no incomplete drafts saved. Start a new submission whenever you're ready.
+                        You have no incomplete drafts saved. Start a new submission whenever you&apos;re ready.
                       </p>
                     </div>
                   </td>

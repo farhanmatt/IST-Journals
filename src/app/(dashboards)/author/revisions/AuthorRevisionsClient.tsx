@@ -96,7 +96,7 @@ export function AuthorRevisionsClient({ submissions, initialSelectedId }: Author
       title: "Submit Revised Manuscript",
       message: (
         <div className="space-y-2">
-          <p>Are you sure you want to submit your revised manuscript for <strong>"{submissionTitle}"</strong>?</p>
+          <p>Are you sure you want to submit your revised manuscript for <strong>&quot;{submissionTitle}&quot;</strong>?</p>
           <p className="text-xs text-slate-500">
             This will upload revision file <strong>{uploaded.name}</strong> and deliver your rebuttal to the editorial team.
           </p>
@@ -303,7 +303,7 @@ export function AuthorRevisionsClient({ submissions, initialSelectedId }: Author
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-500 italic">No direct reviewer comments attached. Please follow the editor's instructions above.</p>
+                          <p className="text-xs text-slate-500 italic">No direct reviewer comments attached. Please follow the editor&apos;s instructions above.</p>
                         )}
                       </div>
 

@@ -162,7 +162,7 @@ export default async function CopyEditorManuscriptWorkspacePage({
                   Original Manuscript Files ({originalFiles.length})
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Download the author's submission to perform language and styling edits.
+                  Download the author&apos;s submission to perform language and styling edits.
                 </p>
               </div>
             </div>

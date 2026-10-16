@@ -123,7 +123,7 @@ export function SectionsClient({ initialSections }: SectionsClientProps) {
             <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
               <Layers className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="text-slate-500 font-medium">No sections configured yet.</p>
-              <p className="text-sm text-slate-400 mt-1">Click "Add Section" to create your first journal section.</p>
+              <p className="text-sm text-slate-400 mt-1">Click &quot;Add Section&quot; to create your first journal section.</p>
             </div>
           )}
 

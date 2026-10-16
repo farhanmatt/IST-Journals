@@ -7,7 +7,7 @@ export default function JournalPage() {
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 flex flex-col min-h-[500px]">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Journal Management</h1>
       <p className="text-slate-500 mb-8">
-        Manage your journal's configuration, structure, and editorial board here. 
+        Manage your journal&apos;s configuration, structure, and editorial board here. 
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -122,7 +122,7 @@ export function TemplatesClient({ initialTemplates }: TemplatesClientProps) {
             <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
               <Mail className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="text-slate-500 font-medium">No templates configured yet.</p>
-              <p className="text-sm text-slate-400 mt-1">Click "New Template" to create your first email template.</p>
+              <p className="text-sm text-slate-400 mt-1">Click &quot;New Template&quot; to create your first email template.</p>
             </div>
           )}
 

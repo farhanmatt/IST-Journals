@@ -46,7 +46,7 @@ export default async function ReviewWorkspacePage({ params }: { params: { id: st
             <span>Thank you for completing this peer review!</span>
           </div>
           <p className="text-xs sm:text-sm text-emerald-800 leading-relaxed">
-            Your review evaluation for <strong>"{submission.title}"</strong> has been recorded and delivered to the editorial board.
+            Your review evaluation for <strong>&quot;{submission.title}&quot;</strong> has been recorded and delivered to the editorial board.
           </p>
           <div className="pt-2">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200">

@@ -919,7 +919,7 @@ export function EditorActionsClient({
               </div>
 
               <p className="text-xs text-slate-600 leading-relaxed">
-                Assign a reviewer to re-evaluate the manuscript in light of the author's revisions and rebuttal notes. The submission status will change to <strong>Under Review</strong>.
+                Assign a reviewer to re-evaluate the manuscript in light of the author&apos;s revisions and rebuttal notes. The submission status will change to <strong>Under Review</strong>.
               </p>
 
               <div>
@@ -1040,7 +1040,7 @@ export function EditorActionsClient({
                   <p className="text-emerald-700 text-[11px] font-medium">Completed: {new Date(ca.completedAt).toLocaleDateString()}</p>
                 )}
                 {ca.notes && (
-                  <p className="text-slate-600 text-[11px] italic bg-white p-2 rounded-lg border border-slate-200/70 mt-1 leading-relaxed">"{ca.notes}"</p>
+                  <p className="text-slate-600 text-[11px] italic bg-white p-2 rounded-lg border border-slate-200/70 mt-1 leading-relaxed">&quot;{ca.notes}&quot;</p>
                 )}
               </div>
             ))}
@@ -1191,7 +1191,7 @@ export function EditorActionsClient({
                   <p className="text-emerald-700 text-[11px] font-medium">Completed: {new Date(pa.completedAt).toLocaleDateString()}</p>
                 )}
                 {pa.notes && (
-                  <p className="text-slate-600 text-[11px] italic bg-white p-2 rounded-lg border border-slate-200/70 mt-1 leading-relaxed">"{pa.notes}"</p>
+                  <p className="text-slate-600 text-[11px] italic bg-white p-2 rounded-lg border border-slate-200/70 mt-1 leading-relaxed">&quot;{pa.notes}&quot;</p>
                 )}
               </div>
             ))}
@@ -1517,7 +1517,7 @@ export function EditorActionsClient({
         {productionAssignments.length > 0 && productionAssignments[0].notes && (
           <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl text-xs space-y-1">
             <span className="font-semibold text-amber-900">Pending Feedback Sent:</span>
-            <p className="text-slate-800 italic leading-relaxed">"{productionAssignments[0].notes}"</p>
+            <p className="text-slate-800 italic leading-relaxed">&quot;{productionAssignments[0].notes}&quot;</p>
           </div>
         )}
       </div>
