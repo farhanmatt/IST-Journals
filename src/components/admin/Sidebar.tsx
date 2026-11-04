@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, Users, Book, FileText, 
   UploadCloud, Globe, Bell, BarChart, 
-  ShieldAlert, Settings, ChevronDown, ChevronRight
+  ShieldAlert, Settings, ChevronDown, ChevronRight, Shield
 } from "lucide-react";
 import { useState } from "react";
 
@@ -87,19 +87,25 @@ export function Sidebar({ isMobile = false, onClose }: { isMobile?: boolean; onC
   };
 
   return (
-    <aside className={`w-64 bg-slate-950 text-slate-300 h-full flex flex-col flex-shrink-0 transition-all duration-300 shadow-2xl z-20 border-r border-slate-800 ${isMobile ? 'flex' : 'hidden md:flex'}`}>
-      <div className="h-16 px-6 flex items-center border-b border-slate-800/60 bg-slate-950/50">
-        <h2 className="text-[13px] font-black text-white tracking-[0.2em] flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
-            <Settings className="w-4 h-4 text-blue-400" />
+    <aside className={`w-64 bg-slate-950 text-slate-300 h-full flex flex-col flex-shrink-0 transition-all duration-300 shadow-2xl z-20 border-r border-slate-800/80 ${isMobile ? 'flex' : 'hidden md:flex'}`}>
+      <div className="h-16 px-6 flex items-center border-b border-slate-800/80 bg-slate-950/80 shrink-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/25 ring-1 ring-white/20">
+            <Shield className="w-4 h-4 text-white" />
           </div>
-          <span>ADMIN PANEL</span>
-        </h2>
+          <div>
+            <h2 className="text-xs font-black text-white tracking-[0.18em] uppercase">
+              Admin Portal
+            </h2>
+            <p className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">
+              Management Suite
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Hide scrollbar by default, show on hover or make it super thin */}
-      <nav className="flex-1 overflow-y-auto py-5 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-        <ul className="space-y-1 px-3">
+      <nav className="flex-1 overflow-y-auto py-5 px-3 space-y-1 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+        <ul className="space-y-1">
           {navItems.map((item) => {
             const isActive = item.href === pathname || item.subItems?.some(sub => pathname.startsWith(sub.href));
             const isOpen = openMenus[item.title] || isActive;
@@ -110,13 +116,14 @@ export function Sidebar({ isMobile = false, onClose }: { isMobile?: boolean; onC
                   <Link 
                     href={item.href}
                     prefetch={true}
-                    className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm ${
+                    onClick={() => { if (isMobile && onClose) onClose(); }}
+                    className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 text-xs sm:text-sm font-semibold ${
                       pathname === item.href 
-                        ? "bg-blue-600/10 text-blue-400 font-semibold" 
-                        : "hover:bg-slate-800/50 hover:text-slate-100 text-slate-400 font-medium"
+                        ? "bg-blue-600 text-white shadow-sm shadow-blue-500/20" 
+                        : "hover:bg-slate-800/70 hover:text-white text-slate-400"
                     }`}
                   >
-                    <item.icon className={`w-[18px] h-[18px] ${pathname === item.href ? "text-blue-400" : "text-slate-500"}`} />
+                    <item.icon className={`w-4 h-4 ${pathname === item.href ? "text-white" : "text-slate-400"}`} />
                     <span>{item.title}</span>
                   </Link>
                 ) : (
@@ -126,30 +133,35 @@ export function Sidebar({ isMobile = false, onClose }: { isMobile?: boolean; onC
                         toggleMenu(item.title);
                         if (item.href) router.push(item.href);
                       }}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 w-full text-sm ${
+                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-200 w-full text-xs sm:text-sm font-semibold ${
                         isActive 
-                          ? "bg-slate-800/40 text-slate-100 font-semibold" 
-                          : "hover:bg-slate-800/50 hover:text-slate-100 text-slate-400 font-medium"
+                          ? "bg-slate-800/80 text-white" 
+                          : "hover:bg-slate-800/60 hover:text-white text-slate-400"
                       }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <item.icon className={`w-[18px] h-[18px] ${isActive ? "text-blue-400" : "text-slate-500"}`} />
+                        <item.icon className={`w-4 h-4 ${isActive ? "text-blue-400" : "text-slate-400"}`} />
                         <span>{item.title}</span>
                       </div>
-                      {isOpen ? <ChevronDown className="w-4 h-4 text-slate-500" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
+                      {isOpen ? (
+                        <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                      ) : (
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                      )}
                     </button>
                     
-                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"}`}>
-                      <ul className="space-y-1 pl-11 pr-2 mb-2">
+                    <div className={`overflow-hidden transition-all duration-200 ease-in-out ${isOpen ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"}`}>
+                      <ul className="space-y-1 pl-10 pr-1 mb-2 border-l border-slate-800/80 ml-5">
                         {item.subItems?.map((subItem) => (
                           <li key={subItem.title}>
                             <Link 
                               href={subItem.href}
                               prefetch={true}
-                              className={`block px-3 py-2 text-[13px] rounded-lg transition-all duration-200 ${
+                              onClick={() => { if (isMobile && onClose) onClose(); }}
+                              className={`block px-3 py-1.5 text-xs rounded-lg transition-all duration-200 font-medium ${
                                 pathname === subItem.href 
-                                  ? "text-blue-400 font-semibold bg-blue-600/5" 
-                                  : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/30 font-medium"
+                                  ? "text-blue-400 font-semibold bg-blue-500/10" 
+                                  : "text-slate-400 hover:text-white hover:bg-slate-800/40"
                               }`}
                             >
                               {subItem.title}

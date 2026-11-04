@@ -7,7 +7,8 @@ import { PublicFooter } from "@/components/public/PublicFooter";
 import { format } from "date-fns";
 import { 
   FileText, Download, Calendar, BookOpen, 
-  ExternalLink, ArrowLeft, Eye, Award, CheckCircle 
+  ExternalLink, ArrowLeft, Eye, Award, CheckCircle, 
+  Globe, ShieldCheck, Share2
 } from "lucide-react";
 
 export default async function PublicArticlePage({ params }: { params: { id: string } }) {
@@ -71,14 +72,14 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
   const supplementaryFiles = submission.files.filter(f => f.type === "SUPPLEMENTARY");
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900 selection:bg-blue-100">
       <PublicHeader journalName={journalName} />
 
-      <main className="flex-grow py-10">
+      <main className="flex-grow py-10 sm:py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
-          {/* Breadcrumb / Back link */}
-          <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-500 overflow-x-auto pb-1">
+          {/* Breadcrumb / Back Navigation */}
+          <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-500 overflow-x-auto pb-1 scrollbar-none">
             <Link href="/" className="hover:text-blue-600 transition-colors font-medium">Home</Link>
             <span className="text-slate-300">/</span>
             <Link href="/articles" className="hover:text-blue-600 transition-colors font-medium">Articles</Link>
@@ -91,22 +92,26 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
           </div>
 
           {/* Article Header Card */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition-shadow p-6 sm:p-10 space-y-6">
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card p-6 sm:p-10 space-y-7">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/60">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60 shadow-2xs">
                 {submission.section?.name || "Original Research"}
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 shadow-2xs">
                 <CheckCircle className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
                 Peer Reviewed & Published
               </span>
-              <span className="text-xs font-medium text-slate-500 ml-auto flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-200/60">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60 shadow-2xs">
+                <Globe className="w-3.5 h-3.5 mr-1.5 text-indigo-600" />
+                Open Access (CC BY 4.0)
+              </span>
+              <span className="text-xs font-semibold text-slate-500 ml-auto flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60 shadow-2xs">
                 <Eye className="w-3.5 h-3.5 text-slate-400" />
-                {article.views} views
+                <span>{article.views} views</span>
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-[1.25] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-[1.22] tracking-tight">
               {submission.title}
             </h1>
 
@@ -126,18 +131,20 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
             </div>
 
             {/* Publication Metadata & Galley Download Buttons */}
-            <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="bg-slate-50/80 rounded-2xl p-6 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
               <div className="space-y-1.5 text-xs text-slate-600">
                 <p>
                   <span className="font-bold text-slate-700">Issue:</span>{' '}
-                  <Link href={'/issue/' + issue.id} className="text-blue-600 font-semibold hover:underline">
+                  <Link href={'/issue/' + issue.id} className="text-blue-600 font-bold hover:underline">
                     Volume {issue.volume}, Issue {issue.issueNumber} ({issue.year})
                   </Link>
                 </p>
                 {article.doi && (
                   <p>
                     <span className="font-bold text-slate-700">DOI:</span>{' '}
-                    <span className="font-mono text-blue-700 font-semibold">{article.doi}</span>
+                    <a href={`https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer" className="font-mono text-blue-700 font-bold hover:underline">
+                      {article.doi}
+                    </a>
                   </p>
                 )}
                 {article.pageRange && (
@@ -154,7 +161,7 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
                 {pdfFile && (
                   <a
                     href={'/article/' + article.id + '/pdf'}
-                    className="inline-flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-red-600 hover:bg-red-700 text-white shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
+                    className="inline-flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-red-600 hover:bg-red-700 text-white shadow-xs transition-all hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download PDF
@@ -165,7 +172,7 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
                     href={htmlFile.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
+                    className="inline-flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-blue-600 hover:bg-blue-700 text-white shadow-xs transition-all hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Read HTML
@@ -194,7 +201,7 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5">Keywords</h3>
                 <div className="flex flex-wrap gap-2">
                   {submission.keywords.split(',').map((kw, i) => (
-                    <span key={i} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg border border-slate-200/60">
+                    <span key={i} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-xl border border-slate-200/60">
                       {kw.trim()}
                     </span>
                   ))}
@@ -212,7 +219,7 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
                       key={file.id}
                       href={file.url}
                       download
-                      className="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200/60 gap-1.5 transition-colors"
+                      className="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200/60 gap-1.5 transition-colors"
                     >
                       <Download className="w-3.5 h-3.5 text-blue-500" />
                       <span>{file.originalName}</span>
@@ -223,9 +230,9 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
             )}
 
             {/* Citation Box */}
-            <div className="pt-4 border-t border-slate-100">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">How to Cite</h3>
-              <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-mono text-slate-700 leading-relaxed">
+            <div className="pt-4 border-t border-slate-100 space-y-2">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">How to Cite</h3>
+              <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-mono text-slate-700 leading-relaxed selection:bg-blue-200">
                 {submission.author.name}{submission.coAuthors.length > 0 ? " et al." : ""}. ({new Date(article.publishedAt).getFullYear()}). {submission.title}. <i>{journalName}</i>, {issue.volume}({issue.issueNumber}){article.pageRange ? ", " + article.pageRange : ""}. {article.doi ? "https://doi.org/" + article.doi : ""}
               </div>
             </div>
@@ -233,13 +240,13 @@ export default async function PublicArticlePage({ params }: { params: { id: stri
           </div>
 
           {/* Back to issue button */}
-          <div className="text-center pt-4">
+          <div className="text-center pt-2">
             <Link
               href={'/issue/' + issue.id}
-              className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
+              className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-1.5" />
-              Back to Volume {issue.volume}, Issue {issue.issueNumber} Table of Contents
+              <span>Back to Volume {issue.volume}, Issue {issue.issueNumber} Table of Contents</span>
             </Link>
           </div>
 

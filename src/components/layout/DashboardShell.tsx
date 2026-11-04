@@ -29,15 +29,31 @@ export function DashboardShell({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close mobile drawer on route change
+  // Close mobile drawer on route change or ESC
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    if (mobileMenuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans selection:bg-blue-500/30">
+    <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans selection:bg-blue-500/20">
       {/* Desktop Stationary Sidebar */}
-      <aside className="hidden md:flex w-64 h-screen shrink-0 flex-col z-30 select-none">
+      <aside className="hidden md:flex w-64 h-screen shrink-0 flex-col z-30 select-none border-r border-slate-800 bg-slate-950">
         {sidebar}
       </aside>
 
@@ -46,17 +62,17 @@ export function DashboardShell({
         <div className="fixed inset-0 z-50 md:hidden flex" role="dialog" aria-modal="true">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer Content */}
-          <div className="relative flex flex-col w-72 max-w-[85vw] h-full shadow-2xl z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative flex flex-col w-72 max-w-[85vw] h-full bg-slate-950 shadow-2xl z-10 animate-in slide-in-from-left duration-250 border-r border-slate-800">
             {sidebar}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-4 right-3 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors z-20"
+              className="absolute top-4 right-3 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors z-20 focus:outline-none focus:ring-2 focus:ring-blue-500"
               aria-label="Close navigation menu"
             >
               <X className="w-5 h-5" />
@@ -78,8 +94,10 @@ export function DashboardShell({
         />
 
         {/* Scrollable Main Content */}
-        <main className={`flex-1 overflow-y-auto ${mainClassName}`}>
-          {children}
+        <main className={`flex-1 overflow-y-auto ${mainClassName} scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent`}>
+          <div className="animate-in fade-in duration-200">
+            {children}
+          </div>
         </main>
       </div>
     </div>

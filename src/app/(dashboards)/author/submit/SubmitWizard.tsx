@@ -83,9 +83,9 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
       {/* Progress Stepper Card */}
-      <div className="bg-white p-6 sm:p-7 rounded-2xl shadow-sm border border-slate-200/80">
+      <div className="bg-white p-6 sm:p-7 rounded-3xl shadow-card border border-slate-200/80">
         <div className="flex items-center justify-between relative">
           {steps.map((s, i) => {
             const isCompleted = step > s.num;
@@ -93,17 +93,17 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
             return (
               <div key={s.num} className="flex flex-col items-center relative z-10 flex-1">
                 <div 
-                  className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center font-bold text-sm transition-all duration-200 ${
+                  className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-200 ${
                     isCompleted 
                       ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20" 
                       : isCurrent 
-                      ? "bg-blue-600 text-white ring-4 ring-blue-500/15 shadow-sm shadow-blue-600/30 scale-105" 
+                      ? "bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white ring-4 ring-blue-500/15 shadow-md shadow-blue-600/30 scale-105" 
                       : "bg-slate-100 text-slate-400 border border-slate-200"
                   }`}
                 >
                   {isCompleted ? <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> : s.num}
                 </div>
-                <span className={`text-xs mt-2.5 font-semibold text-center hidden sm:block ${isCurrent ? 'text-blue-700' : isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
+                <span className={`text-xs mt-2.5 font-bold text-center hidden sm:block ${isCurrent ? 'text-blue-700' : isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
                   {s.title}
                 </span>
                 <span className="text-[10px] text-slate-400 font-normal hidden md:block">
@@ -124,18 +124,18 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-200 text-sm font-medium flex items-center gap-2.5 animate-in fade-in duration-200">
+        <div className="bg-red-50 text-red-700 p-4 rounded-2xl border border-red-200 text-sm font-medium flex items-center gap-2.5 animate-in fade-in duration-200">
           <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Main Step Content Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80 min-h-[420px]">
+      <div className="bg-white p-6 sm:p-10 rounded-3xl shadow-card border border-slate-200/80 min-h-[420px]">
         {step === 1 && (
           <div className="space-y-6">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Manuscript Details</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Manuscript Details</h2>
               <p className="text-xs text-slate-500 mt-1">Provide the foundational metadata and abstract for your submission.</p>
             </div>
             
@@ -145,7 +145,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                   Journal Section *
                 </label>
                 <select 
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 text-sm focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
                   value={formData.sectionId}
                   onChange={e => setFormData({...formData, sectionId: e.target.value})}
                 >
@@ -154,7 +154,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                     <option key={sec.id} value={sec.id}>{sec.name}</option>
                   ))}
                 </select>
-                <p className="text-[11px] text-slate-500 mt-1">Select the most relevant section category for your research.</p>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium">Select the most relevant section category for your research.</p>
               </div>
 
               <div>
@@ -164,7 +164,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                 <input 
                   type="text" 
                   required
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
                   placeholder="Enter the complete title of your research manuscript"
@@ -177,7 +177,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                 </label>
                 <textarea 
                   rows={6}
-                  className="w-full p-3.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none leading-relaxed"
+                  className="w-full p-4 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none leading-relaxed"
                   value={formData.abstract}
                   onChange={e => setFormData({...formData, abstract: e.target.value})}
                   placeholder="Summarize the background, methodology, primary results, and key conclusions..."
@@ -190,12 +190,12 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                 </label>
                 <input 
                   type="text" 
-                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
+                  className="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50 text-slate-900 text-sm placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all outline-none"
                   value={formData.keywords}
                   onChange={e => setFormData({...formData, keywords: e.target.value})}
                   placeholder="e.g. quantum computing, entanglement, machine learning"
                 />
-                <p className="text-[11px] text-slate-500 mt-1">Separate individual keywords with commas.</p>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium">Separate individual keywords with commas.</p>
               </div>
             </div>
           </div>
@@ -204,19 +204,19 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
         {step === 2 && (
           <div className="space-y-6">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Authors & Affiliations</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Authors & Affiliations</h2>
               <p className="text-xs text-slate-500 mt-1">Manage authorship roles and co-author records.</p>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 p-8 rounded-2xl text-slate-800 border border-blue-100 flex flex-col items-center justify-center space-y-3.5 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shadow-sm">
-                <UserCheck className="w-6 h-6" />
+            <div className="bg-gradient-to-br from-blue-50/70 to-indigo-50/50 p-8 sm:p-10 rounded-3xl text-slate-800 border border-blue-100 flex flex-col items-center justify-center space-y-3.5 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shadow-xs">
+                <UserCheck className="w-7 h-7" />
               </div>
-              <h3 className="font-bold text-slate-900 text-base">Primary Corresponding Author</h3>
+              <h3 className="font-extrabold text-slate-900 text-lg">Primary Corresponding Author</h3>
               <p className="text-sm text-slate-600 max-w-md leading-relaxed">
                 You will be automatically registered as the corresponding author for this manuscript.
               </p>
-              <div className="p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-blue-100 text-xs text-slate-700 max-w-md">
+              <div className="p-3.5 bg-white/90 backdrop-blur-sm rounded-xl border border-blue-100 text-xs text-slate-700 max-w-md font-medium">
                 Co-authors and institutional affiliations can also be added or revised from the manuscript details page after saving your draft.
               </div>
             </div>
@@ -226,12 +226,12 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
         {step === 3 && (
           <div className="space-y-6">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Upload Manuscript Document</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Upload Manuscript Document</h2>
               <p className="text-xs text-slate-500 mt-1">Upload the primary manuscript document file (.docx, .pdf, or archive).</p>
             </div>
 
             <div 
-              className="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50/50 hover:bg-blue-50/20 rounded-2xl p-10 sm:p-12 flex flex-col items-center justify-center text-slate-500 transition-all cursor-pointer relative"
+              className="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50/50 hover:bg-blue-50/20 rounded-3xl p-10 sm:p-12 flex flex-col items-center justify-center text-slate-500 transition-all cursor-pointer relative"
               onClick={() => document.getElementById('file-upload')?.click()}
             >
               <input 
@@ -286,9 +286,9 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
               {(formData as any).fileUrl ? (
                 <div className="flex flex-col items-center text-center">
                   {(formData as any).fileType?.startsWith('image/') ? (
-                    <img src={(formData as any).fileUrl} alt="Preview" className="max-h-36 mb-4 object-contain rounded-xl border border-slate-200 shadow-sm" />
+                    <img src={(formData as any).fileUrl} alt="Preview" className="max-h-36 mb-4 object-contain rounded-2xl border border-slate-200 shadow-sm" />
                   ) : (
-                    <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3 shadow-sm">
+                    <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3 shadow-xs">
                       <FileText className="w-8 h-8" />
                     </div>
                   )}
@@ -300,12 +300,12 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
                 </div>
               ) : (
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mb-3">
-                    <UploadCloud className="w-7 h-7" />
+                  <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center mb-3">
+                    <UploadCloud className="w-8 h-8 text-slate-400" />
                   </div>
                   <p className="font-bold text-slate-800 text-sm">Click to choose a file or drag and drop</p>
                   <p className="text-xs text-slate-500 mt-1">DOCX, PDF, or ZIP archive up to 50MB</p>
-                  <span className="mt-3 px-3.5 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-200">
+                  <span className="mt-3.5 px-4 py-2 bg-blue-50 text-blue-700 text-xs font-bold rounded-xl border border-blue-200 shadow-2xs">
                     Browse Computer
                   </span>
                 </div>
@@ -317,7 +317,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
         {step === 4 && (
           <div className="space-y-6">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Declarations & Checklist</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Declarations & Checklist</h2>
               <p className="text-xs text-slate-500 mt-1">Please certify each statement before advancing to the final review step.</p>
             </div>
 
@@ -330,11 +330,11 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
               ].map((text, i) => (
                 <label 
                   key={i} 
-                  className="flex items-start space-x-3.5 p-4 bg-slate-50/60 rounded-xl border border-slate-200 cursor-pointer hover:bg-blue-50/30 hover:border-blue-300 transition-all"
+                  className="flex items-start space-x-3.5 p-4.5 bg-slate-50/60 rounded-2xl border border-slate-200/80 cursor-pointer hover:bg-blue-50/30 hover:border-blue-300 transition-all"
                 >
                   <input 
                     type="checkbox" 
-                    className="mt-0.5 w-4.5 h-4.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500" 
+                    className="mt-0.5 w-4.5 h-4.5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer" 
                     required 
                   />
                   <span className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">{text}</span>
@@ -347,38 +347,38 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
         {step === 5 && (
           <div className="space-y-6">
             <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Review & Final Submission</h2>
+              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">Review & Final Submission</h2>
               <p className="text-xs text-slate-500 mt-1">Verify your submission details before forwarding to the editorial board.</p>
             </div>
 
-            <div className="bg-slate-50/70 p-6 rounded-2xl border border-slate-200 space-y-4">
+            <div className="bg-slate-50/70 p-6 sm:p-7 rounded-3xl border border-slate-200/80 space-y-4">
               <div>
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Manuscript Title</p>
                 <p className="text-slate-900 font-bold text-base sm:text-lg mt-0.5">{formData.title || "Untitled"}</p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200/60">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-200/60">
                 <div>
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Section</p>
-                  <p className="text-slate-800 font-medium text-sm mt-0.5">
+                  <p className="text-slate-800 font-semibold text-sm mt-0.5">
                     {sections.find(s => s.id === formData.sectionId)?.name || "Not specified"}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Keywords</p>
-                  <p className="text-slate-800 font-medium text-sm mt-0.5">{formData.keywords || "None"}</p>
+                  <p className="text-slate-800 font-semibold text-sm mt-0.5">{formData.keywords || "None"}</p>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-200/60">
+              <div className="pt-3 border-t border-slate-200/60">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Manuscript File</p>
-                <p className="text-slate-800 font-medium text-sm mt-0.5 flex items-center gap-1.5">
+                <p className="text-slate-800 font-semibold text-sm mt-0.5 flex items-center gap-1.5">
                   <FileText className="w-4 h-4 text-blue-600" />
                   <span>{(formData as any).fileName || "No file uploaded"}</span>
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-slate-200/60">
+              <div className="pt-3 border-t border-slate-200/60">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Abstract</p>
                 <p className="text-slate-800 text-xs sm:text-sm whitespace-pre-wrap leading-relaxed mt-1">
                   {formData.abstract || "No abstract provided"}
@@ -386,7 +386,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
               </div>
             </div>
             
-            <div className="bg-amber-50/80 border border-amber-200/80 text-amber-900 p-4 rounded-xl flex items-start space-x-3 text-xs leading-relaxed">
+            <div className="bg-amber-50/80 border border-amber-200/80 text-amber-900 p-4.5 rounded-2xl flex items-start space-x-3 text-xs leading-relaxed">
               <AlertCircle className="w-5 h-5 mt-0.5 text-amber-600 shrink-0" />
               <div>
                 <p className="font-bold text-amber-950 mb-0.5">Important Confirmation</p>
@@ -405,7 +405,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
           type="button"
           onClick={handleSaveDraft}
           disabled={isSaving}
-          className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 py-2.5 text-slate-700 bg-white border border-slate-200/90 rounded-xl hover:bg-slate-50 font-semibold text-xs shadow-sm disabled:opacity-50 transition-colors"
+          className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 py-2.5 text-slate-700 bg-white border border-slate-200/90 rounded-xl hover:bg-slate-50 font-semibold text-xs shadow-xs disabled:opacity-50 transition-colors"
         >
           <Save className="w-4 h-4" />
           <span>Save as Draft</span>
@@ -429,7 +429,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
               type="button"
               onClick={handleNext}
               disabled={isSaving || (step === 1 && !formData.title)}
-              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-2.5 text-white bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold text-xs shadow-sm shadow-blue-600/20 disabled:opacity-50 transition-colors"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-2.5 text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl font-semibold text-xs shadow-md shadow-blue-600/25 disabled:opacity-50 transition-all hover:-translate-y-0.5 active:translate-y-0"
             >
               {isSaving ? (
                 <>
@@ -448,7 +448,7 @@ export function SubmitWizard({ sections }: { sections: Section[] }) {
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-7 py-2.5 text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl font-semibold text-xs shadow-sm shadow-emerald-600/20 disabled:opacity-50 transition-colors"
+              className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-7 py-2.5 text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl font-semibold text-xs shadow-md shadow-emerald-600/25 disabled:opacity-50 transition-all hover:-translate-y-0.5 active:translate-y-0"
             >
               {isSaving ? (
                 <>

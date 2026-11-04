@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 import { FileSignature, CheckCircle, XCircle, Users, LayoutDashboard, Clock, FileText, CheckCircle2 } from "lucide-react";
 
 export default async function JournalManagerDashboardPage() {
@@ -33,14 +34,14 @@ export default async function JournalManagerDashboardPage() {
   const rejectedArticles = countMap["REJECTED"] || 0;
 
   const metrics = [
-    { label: "Total Submissions", value: totalSubmissions, icon: FileSignature, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "New Submissions", value: newSubmissions, icon: LayoutDashboard, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Under Review", value: underReview, icon: Clock, color: "text-purple-600", bg: "bg-purple-50" },
-    { label: "Revision Required", value: revisionRequired, icon: FileText, color: "text-orange-600", bg: "bg-orange-50" },
-    { label: "Accepted", value: acceptedArticles, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "Rejected", value: rejectedArticles, icon: XCircle, color: "text-red-600", bg: "bg-red-50" },
-    { label: "Published Articles", value: publishedArticles, icon: CheckCircle2, color: "text-indigo-600", bg: "bg-indigo-50" },
-    { label: "Editorial Team", value: totalTeam, icon: Users, color: "text-slate-600", bg: "bg-slate-50" },
+    { label: "Total Submissions", value: totalSubmissions, icon: FileSignature, color: "text-blue-600", bg: "bg-blue-50", href: "/journal-manager/submissions" },
+    { label: "New Submissions", value: newSubmissions, icon: LayoutDashboard, color: "text-amber-600", bg: "bg-amber-50", href: "/journal-manager/submissions?status=SUBMITTED" },
+    { label: "Under Review", value: underReview, icon: Clock, color: "text-purple-600", bg: "bg-purple-50", href: "/journal-manager/submissions?status=UNDER_REVIEW" },
+    { label: "Revision Required", value: revisionRequired, icon: FileText, color: "text-orange-600", bg: "bg-orange-50", href: "/journal-manager/submissions?status=REVISION_REQUIRED" },
+    { label: "Accepted", value: acceptedArticles, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50", href: "/journal-manager/submissions?status=ACCEPTED" },
+    { label: "Rejected", value: rejectedArticles, icon: XCircle, color: "text-red-600", bg: "bg-red-50", href: "/journal-manager/submissions?status=REJECTED" },
+    { label: "Published Articles", value: publishedArticles, icon: CheckCircle2, color: "text-indigo-600", bg: "bg-indigo-50", href: "/journal-manager/issues" },
+    { label: "Editorial Team", value: totalTeam, icon: Users, color: "text-slate-600", bg: "bg-slate-50", href: "/journal-manager/editorial-team" },
   ];
 
   return (
@@ -52,15 +53,19 @@ export default async function JournalManagerDashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center space-x-4 transition-transform hover:-translate-y-1 hover:shadow-md">
-            <div className={`p-4 rounded-full ${metric.bg} ${metric.color}`}>
+          <Link 
+            key={index} 
+            href={metric.href}
+            className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center space-x-4 transition-transform hover:-translate-y-1 hover:shadow-md hover:border-blue-300 group cursor-pointer"
+          >
+            <div className={`p-4 rounded-full ${metric.bg} ${metric.color} group-hover:scale-105 transition-transform`}>
               <metric.icon className="h-7 w-7" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{metric.label}</p>
+              <p className="text-sm font-medium text-slate-500 group-hover:text-blue-600 transition-colors">{metric.label}</p>
               <h3 className="text-2xl font-bold text-slate-900">{metric.value}</h3>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

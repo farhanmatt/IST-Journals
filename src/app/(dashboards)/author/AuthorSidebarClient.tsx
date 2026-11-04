@@ -25,20 +25,20 @@ export function AuthorSidebarClient() {
   return (
     <nav className="space-y-1">
       {menuItems.map((item) => {
-        const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+        const isActive = pathname === item.href || (item.href !== "/author/dashboard" && pathname.startsWith(item.href + "/"));
         return (
           <Link
             key={item.name}
             href={item.href}
             prefetch={true}
-            className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+            className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
               isActive
-                ? "bg-blue-600 text-white shadow-sm shadow-blue-500/20"
-                : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                ? "bg-blue-600 text-white shadow-sm shadow-blue-500/25 ring-1 ring-white/10"
+                : "text-slate-400 hover:bg-slate-800/70 hover:text-white"
             }`}
           >
-            <item.icon className={`h-4.5 w-4.5 ${isActive ? "text-white" : "text-slate-400"}`} />
-            <span>{item.name}</span>
+            <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
+            <span className="truncate">{item.name}</span>
           </Link>
         );
       })}

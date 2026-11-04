@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Inbox, FileText, CheckCircle, ArrowRight } from "lucide-react";
+import { Inbox, FileText, CheckCircle, ArrowRight, Clock, ClipboardCheck } from "lucide-react";
 
 export default async function ReviewerDashboardPage() {
   const session = await getServerSession(authOptions);
@@ -25,65 +25,83 @@ export default async function ReviewerDashboardPage() {
   ]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-200">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Reviewer Dashboard</h1>
-        <p className="text-slate-500 mt-1 text-sm">Overview of your review invitations, active manuscripts, and completed reports.</p>
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Reviewer Dashboard</h1>
+        <p className="text-slate-500 mt-1 text-xs sm:text-sm">Overview of your review invitations, active manuscripts, and completed reports.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md card-hover flex items-center space-x-4">
-          <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center shadow-xs">
+        <Link 
+          href="/reviewer/invitations"
+          className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover hover:border-amber-300 card-hover flex items-center space-x-4 transition-all group"
+        >
+          <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl border border-amber-100 flex items-center justify-center shadow-2xs shrink-0 group-hover:scale-105 transition-transform">
             <Inbox className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pending Invitations</p>
-            <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mt-0.5">{invitations}</p>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-amber-600 transition-colors">Pending Invitations</p>
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight mt-0.5">{invitations}</p>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md card-hover flex items-center space-x-4">
-          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shadow-xs">
+        <Link 
+          href="/reviewer/assigned"
+          className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover hover:border-blue-300 card-hover flex items-center space-x-4 transition-all group"
+        >
+          <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl border border-blue-100 flex items-center justify-center shadow-2xs shrink-0 group-hover:scale-105 transition-transform">
             <FileText className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Assignments</p>
-            <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mt-0.5">{activeAssignments}</p>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-blue-600 transition-colors">Active Assignments</p>
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight mt-0.5">{activeAssignments}</p>
           </div>
-        </div>
+        </Link>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md card-hover flex items-center space-x-4">
-          <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shadow-xs">
+        <Link 
+          href="/reviewer/completed"
+          className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover hover:border-emerald-300 card-hover flex items-center space-x-4 transition-all group"
+        >
+          <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 flex items-center justify-center shadow-2xs shrink-0 group-hover:scale-105 transition-transform">
             <CheckCircle className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Completed Reviews</p>
-            <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mt-0.5">{completedReviews}</p>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-emerald-600 transition-colors">Completed Reviews</p>
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight mt-0.5">{completedReviews}</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       {recentInvitations.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-xs border border-slate-200/80 p-6">
-          <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
+        <div className="bg-white rounded-3xl shadow-card border border-slate-200/80 p-6 sm:p-8">
+          <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-lg font-bold text-slate-900">Recent Invitations</h2>
               <p className="text-xs text-slate-500 mt-0.5">Manuscripts awaiting your review confirmation</p>
             </div>
-            <Link href="/reviewer/invitations" className="text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-              View All
+            <Link href="/reviewer/invitations" className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-1">
+              <span>View All</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-          <ul className="space-y-3">
+          <ul className="space-y-3.5">
             {recentInvitations.map(inv => (
-              <li key={inv.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200/60 hover:bg-slate-100/70 transition-colors">
+              <li key={inv.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4.5 bg-slate-50/80 rounded-2xl border border-slate-200/70 hover:bg-slate-100/70 transition-colors">
                 <div>
-                  <p className="font-bold text-slate-900 text-sm leading-snug">{inv.submission.title}</p>
-                  <p className="text-xs text-slate-500 mt-1 font-medium">Due: {inv.dueDate ? new Date(inv.dueDate).toLocaleDateString() : "No deadline"}</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-white text-slate-700 border border-slate-200/70">
+                      {inv.submission.submissionId}
+                    </span>
+                    <span className="text-xs text-slate-500 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-slate-400" />
+                      Due: {inv.dueDate ? new Date(inv.dueDate).toLocaleDateString() : "No deadline"}
+                    </span>
+                  </div>
+                  <p className="font-bold text-slate-900 text-sm sm:text-base leading-snug">{inv.submission.title}</p>
                 </div>
                 <Link 
                   href="/reviewer/invitations" 
-                  className="self-start sm:self-auto px-4 py-2 bg-blue-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-blue-700 shadow-sm shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                  className="self-start sm:self-auto px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Respond
                 </Link>

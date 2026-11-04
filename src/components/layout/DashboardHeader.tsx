@@ -9,7 +9,8 @@ import {
   LogOut, 
   ChevronDown, 
   ExternalLink,
-  Menu
+  Menu,
+  Shield
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
@@ -52,7 +53,7 @@ export function DashboardHeader({
 
   return (
     <>
-      <header className="h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0 z-20 shadow-xs transition-all">
+      <header className="h-16 glass-header border-b border-slate-200/80 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0 z-20 shadow-xs transition-all">
         {/* Left: Portal Title / Mobile Menu Button */}
         <div className="flex items-center space-x-3">
           {onMenuToggle && (
@@ -66,9 +67,11 @@ export function DashboardHeader({
               <Menu className="w-5 h-5" />
             </button>
           )}
-          <span className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
-            {portalName}
-          </span>
+          <div className="flex items-center gap-2.5">
+            <span className="text-sm sm:text-base font-bold text-slate-900 tracking-tight">
+              {portalName}
+            </span>
+          </div>
         </div>
 
         {/* Right: Actions (Notifications, Back to Site, Profile) */}
@@ -76,9 +79,9 @@ export function DashboardHeader({
           <Link
             href="/"
             prefetch={true}
-            className="hidden sm:inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 px-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200/60"
+            className="hidden sm:inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors py-2 px-3 rounded-xl hover:bg-slate-100/80 border border-slate-200/60"
           >
-            <span>Back to Site</span>
+            <span>Journal Home</span>
             <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
           </Link>
 
@@ -89,19 +92,19 @@ export function DashboardHeader({
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 group"
+              className="flex items-center space-x-2.5 p-1.5 rounded-xl hover:bg-slate-100/80 border border-transparent hover:border-slate-200/60 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/20 group"
               aria-expanded={isDropdownOpen}
               aria-haspopup="true"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-sm shadow-blue-500/20 ring-2 ring-white">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs shadow-blue-500/20 ring-2 ring-white">
                 {initial}
               </div>
               
               <div className="hidden md:block text-left">
-                <p className="text-xs font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors max-w-[120px] truncate">
+                <p className="text-xs font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors max-w-[130px] truncate">
                   {user?.name || "User"}
                 </p>
-                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider truncate max-w-[120px]">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider truncate max-w-[130px]">
                   {user?.roles?.[0]?.replace(/_/g, " ") || "Member"}
                 </p>
               </div>
@@ -111,7 +114,7 @@ export function DashboardHeader({
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200/80 p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-dropdown border border-slate-200/90 p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                 <div className="px-3.5 py-3 border-b border-slate-100">
                   <p className="text-sm font-bold text-slate-900 truncate">{user?.name || "User"}</p>
                   <p className="text-xs text-slate-500 truncate mt-0.5 font-medium">{user?.email || ""}</p>
@@ -158,7 +161,7 @@ export function DashboardHeader({
                     className="sm:hidden flex items-center space-x-2.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-xl transition-colors"
                   >
                     <ExternalLink className="w-4 h-4 text-slate-400" />
-                    <span>Back to Site</span>
+                    <span>Journal Home</span>
                   </Link>
                 </div>
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PublicHeader } from "@/components/public/PublicHeader";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { format } from "date-fns";
-import { BookOpen, Calendar, Download, FileText, ArrowLeft } from "lucide-react";
+import { BookOpen, Calendar, Download, FileText, ArrowLeft, Eye, Bookmark } from "lucide-react";
 
 export default async function PublicIssuePage({ params }: { params: { id: string } }) {
   const issue = await prisma.issue.findUnique({
@@ -36,43 +36,43 @@ export default async function PublicIssuePage({ params }: { params: { id: string
   const journalName = settings.get("journalName") || "IST Journals";
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900 selection:bg-blue-100">
       <PublicHeader journalName={journalName} />
 
-      <main className="flex-grow py-12">
+      <main className="flex-grow py-10 sm:py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
-          <div className="flex items-center space-x-2 text-sm text-slate-500">
-            <Link href="/" className="hover:text-blue-600">Home</Link>
-            <span>/</span>
-            <Link href="/articles" className="hover:text-blue-600">Issues & Articles</Link>
-            <span>/</span>
-            <span className="text-slate-800 font-medium">Vol. {issue.volume}, No. {issue.issueNumber} ({issue.year})</span>
+          <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-500">
+            <Link href="/" className="hover:text-blue-600 font-medium transition-colors">Home</Link>
+            <span className="text-slate-300">/</span>
+            <Link href="/articles" className="hover:text-blue-600 font-medium transition-colors">Issues & Articles</Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-slate-800 font-semibold">Vol. {issue.volume}, No. {issue.issueNumber} ({issue.year})</span>
           </div>
 
           {/* Issue Header */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col md:flex-row gap-8 items-start">
-            <div className="w-32 h-44 bg-slate-100 rounded-lg border border-slate-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card p-6 sm:p-10 flex flex-col md:flex-row gap-8 items-start">
+            <div className="w-32 h-44 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 rounded-2xl shadow-md flex-shrink-0 flex items-center justify-center overflow-hidden ring-2 ring-white text-white">
               {issue.coverImage ? (
                 <img src={issue.coverImage} alt="Cover" className="w-full h-full object-cover" />
               ) : (
-                <BookOpen className="w-16 h-16 text-slate-400" />
+                <BookOpen className="w-14 h-14 text-white/90" />
               )}
             </div>
 
             <div className="flex-grow space-y-3">
-              <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-                Published Issue
+              <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60 shadow-2xs">
+                Published Journal Issue
               </div>
-              <h1 className="text-3xl font-extrabold text-slate-900">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
                 Volume {issue.volume}, Issue {issue.issueNumber} ({issue.year})
               </h1>
-              <p className="text-xs text-slate-500 flex items-center gap-1.5">
+              <p className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
                 <Calendar className="w-4 h-4 text-slate-400" />
-                Published: {issue.publishedAt ? format(new Date(issue.publishedAt), 'MMMM yyyy') : issue.year}
+                Published: {issue.publishedAt ? format(new Date(issue.publishedAt), 'MMMM d, yyyy') : issue.year}
               </p>
               {issue.description && (
-                <p className="text-sm text-slate-600 pt-2 border-t border-slate-100">
+                <p className="text-xs sm:text-sm text-slate-600 pt-2 border-t border-slate-100 leading-relaxed">
                   {issue.description}
                 </p>
               )}
@@ -80,10 +80,10 @@ export default async function PublicIssuePage({ params }: { params: { id: string
           </div>
 
           {/* Table of Contents */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-6">
-            <h2 className="text-xl font-bold text-slate-900 pb-3 border-b border-slate-100 flex items-center justify-between">
+          <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card p-6 sm:p-10 space-y-6">
+            <h2 className="text-xl font-bold text-slate-900 pb-4 border-b border-slate-100 flex items-center justify-between">
               <span>Table of Contents</span>
-              <span className="text-xs font-normal text-slate-500">
+              <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
                 {issue.articles.length} {issue.articles.length === 1 ? 'Article' : 'Articles'}
               </span>
             </h2>
@@ -95,33 +95,43 @@ export default async function PublicIssuePage({ params }: { params: { id: string
                   const hasPdf = sub.files.some(f => f.type === "PRODUCTION_READY_PDF" || (f.type === "MANUSCRIPT" && f.originalName.toLowerCase().endsWith(".pdf")));
 
                   return (
-                    <div key={art.id} className="py-6 first:pt-0 last:pb-0 space-y-2">
-                      <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                    <div key={art.id} className="py-6 first:pt-0 last:pb-0 space-y-2.5">
+                      <div className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">
                         {sub.section?.name || "Articles"}
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                      
+                      <h3 className="text-base sm:text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors leading-snug">
                         <Link href={'/article/' + art.id}>
                           {sub.title}
                         </Link>
                       </h3>
-                      <p className="text-sm text-slate-600">
+
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium">
                         {sub.author.name}
                         {sub.coAuthors.length > 0 && " et al."}
                       </p>
-                      
+
                       <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-slate-500">
                         <div className="flex items-center gap-3">
-                          {art.doi && <span>DOI: {art.doi}</span>}
-                          {art.pageRange && <span>Pages: {art.pageRange}</span>}
+                          {art.doi && <span>DOI: <span className="font-mono text-slate-700 font-semibold">{art.doi}</span></span>}
+                          {art.pageRange && <span>Pages: <span className="font-semibold text-slate-700">{art.pageRange}</span></span>}
                         </div>
 
-                        <div className="flex items-center space-x-3">
-                          <Link href={'/article/' + art.id} className="text-blue-600 font-medium hover:underline">
-                            Abstract
+                        <div className="flex items-center space-x-2">
+                          <Link 
+                            href={'/article/' + art.id}
+                            className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition-colors"
+                          >
+                            <Eye className="w-3.5 h-3.5 mr-1" />
+                            <span>Details</span>
                           </Link>
                           {hasPdf && (
-                            <Link href={'/article/' + art.id + '/pdf'} className="inline-flex items-center text-blue-600 font-medium hover:underline">
-                              PDF <Download className="w-3 h-3 ml-1" />
+                            <Link 
+                              href={'/article/' + art.id + '/pdf'}
+                              className="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition-colors shadow-xs"
+                            >
+                              <span>PDF</span>
+                              <Download className="w-3.5 h-3.5 ml-1" />
                             </Link>
                           )}
                         </div>
@@ -131,11 +141,20 @@ export default async function PublicIssuePage({ params }: { params: { id: string
                 })}
               </div>
             ) : (
-              <div className="py-12 text-center text-slate-500">
-                <FileText className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-                <p>No articles published in this issue yet.</p>
+              <div className="p-8 text-center text-slate-400 text-sm">
+                No articles published in this issue yet.
               </div>
             )}
+          </div>
+
+          <div className="text-center pt-2">
+            <Link
+              href="/articles"
+              className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1.5" />
+              <span>Back to All Issues & Articles Archive</span>
+            </Link>
           </div>
 
         </div>

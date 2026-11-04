@@ -8,7 +8,8 @@ import {
   ChevronRight, Award, Globe, ShieldCheck, 
   BarChart, ArrowRight, Download, Eye, Calendar,
   CheckCircle, Layers, Scale, Sparkles, HelpCircle, 
-  FileCheck, ExternalLink, ArrowUpRight, Bookmark
+  FileCheck, ExternalLink, ArrowUpRight, Bookmark,
+  TrendingUp, CheckCircle2
 } from "lucide-react";
 
 export const revalidate = 60;
@@ -119,29 +120,30 @@ export default async function LandingPage() {
         {/* 1. HERO SECTION                                           */}
         {/* ========================================================= */}
         <section id="home" className="relative bg-white border-b border-slate-200/80 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-50/60 via-white to-slate-50/40 pointer-events-none" />
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-indigo-50/50 rounded-full blur-3xl pointer-events-none" />
+          {/* Subtle Ambient Decorative Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 via-white to-slate-50/60 pointer-events-none" />
+          <div className="absolute -top-40 -right-40 w-[30rem] h-[30rem] bg-gradient-to-bl from-blue-200/40 via-indigo-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-sky-200/30 via-blue-100/20 to-transparent rounded-full blur-3xl pointer-events-none" />
           
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32 flex flex-col items-center text-center">
             
             {/* Live Open Access & ISSN Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
-              <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200/80 text-blue-700 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide shadow-xs">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8 animate-in fade-in duration-300">
+              <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200/90 text-blue-700 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide shadow-2xs">
                 <span className="flex h-2 w-2 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                 </span>
                 <span>Open Access Peer-Reviewed Journal</span>
               </div>
-              <div className="inline-flex items-center space-x-1.5 bg-slate-100 border border-slate-200/90 text-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold font-mono shadow-xs">
+              <div className="inline-flex items-center space-x-1.5 bg-slate-100/90 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold font-mono shadow-2xs">
                 <span className="text-blue-600 font-bold">ISSN:</span>
                 <span>{issn}</span>
               </div>
             </div>
             
             {/* Journal Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight max-w-4xl leading-[1.15] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight max-w-4xl leading-[1.12] mb-6">
               {journalName}
             </h1>
             
@@ -154,14 +156,14 @@ export default async function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto">
               <Link 
                 href="/login" 
-                className="inline-flex items-center justify-center px-8 py-3.5 text-sm sm:text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0 gap-2 group"
+                className="inline-flex items-center justify-center px-8 py-3.5 text-sm sm:text-base font-semibold rounded-2xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0 gap-2 group"
               >
                 <span>Submit Manuscript</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 href={currentIssue ? `/issue/${currentIssue.id}` : "#current-issue"} 
-                className="inline-flex items-center justify-center px-8 py-3.5 text-sm sm:text-base font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 gap-2"
+                className="inline-flex items-center justify-center px-8 py-3.5 text-sm sm:text-base font-semibold rounded-2xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all hover:-translate-y-0.5 active:translate-y-0 gap-2"
               >
                 <BookOpen className="w-4 h-4 text-blue-600" />
                 <span>View Current Issue</span>
@@ -169,30 +171,38 @@ export default async function LandingPage() {
             </div>
 
             {/* Quick Fact Strip */}
-            <div className="mt-14 pt-8 border-t border-slate-200/60 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 max-w-4xl w-full text-left">
-              <div className="flex items-center space-x-2.5">
-                <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0" />
+            <div className="mt-14 pt-8 border-t border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 max-w-4xl w-full text-left">
+              <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+                  <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0" />
+                </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">Double-Blind</div>
                   <div className="text-[11px] text-slate-500">Peer Review Process</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2.5">
-                <Globe className="w-5 h-5 text-emerald-600 shrink-0" />
+              <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+                  <Globe className="w-5 h-5 text-emerald-600 shrink-0" />
+                </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">CC BY 4.0</div>
                   <div className="text-[11px] text-slate-500">Open Access Model</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2.5">
-                <Calendar className="w-5 h-5 text-indigo-600 shrink-0" />
+              <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100">
+                  <Calendar className="w-5 h-5 text-indigo-600 shrink-0" />
+                </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">{frequency}</div>
                   <div className="text-[11px] text-slate-500">Publishing Schedule</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2.5">
-                <Award className="w-5 h-5 text-amber-600 shrink-0" />
+              <div className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
+                  <Award className="w-5 h-5 text-amber-600 shrink-0" />
+                </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">COPE Aligned</div>
                   <div className="text-[11px] text-slate-500">Ethical Standards</div>
@@ -206,7 +216,7 @@ export default async function LandingPage() {
         {/* ========================================================= */}
         {/* 2. ABOUT THE JOURNAL SECTION                             */}
         {/* ========================================================= */}
-        <section id="about" className="py-20 bg-slate-50 border-b border-slate-200/80">
+        <section id="about" className="py-20 bg-slate-50/70 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:grid lg:grid-cols-12 lg:gap-12 items-start">
               
@@ -229,27 +239,27 @@ export default async function LandingPage() {
 
                 {/* Key Publishing Features Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 pt-2">
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">ISSN</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1">{issn}</p>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Review Model</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1">Double-Blind</p>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Publication Frequency</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1">{frequency}</p>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Publisher</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1 truncate">{publisher}</p>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Licensing</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1">CC BY 4.0</p>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-card transition-shadow">
                     <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Similarity Check</h4>
                     <p className="text-sm font-bold text-slate-900 mt-1">iThenticate / Plagiarism</p>
                   </div>
@@ -271,7 +281,7 @@ export default async function LandingPage() {
                       "Cryptographic Engineering",
                       "Cyber-Physical Systems & IoT"
                     ].map((area) => (
-                      <span key={area} className="px-3 py-1 bg-white border border-slate-200/80 text-slate-700 text-xs font-medium rounded-lg shadow-2xs">
+                      <span key={area} className="px-3 py-1.5 bg-white border border-slate-200/80 text-slate-700 text-xs font-medium rounded-xl shadow-2xs hover:border-blue-300 transition-colors">
                         {area}
                       </span>
                     ))}
@@ -281,13 +291,13 @@ export default async function LandingPage() {
 
               {/* Scope Side Graphic Card */}
               <div className="lg:col-span-5 mt-10 lg:mt-0">
-                <div className="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-xs space-y-6">
+                <div className="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-card hover:shadow-card-hover transition-all space-y-6">
                   <div className="flex items-center space-x-3 pb-4 border-b border-slate-100">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/60">
-                      <Globe className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/60 shadow-xs">
+                      <Globe className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900 text-sm">Open Access & Repository Policy</h3>
+                      <h3 className="font-bold text-slate-900 text-base">Open Access & Repository Policy</h3>
                       <p className="text-xs text-slate-500">Unrestricted global scholarly distribution</p>
                     </div>
                   </div>
@@ -313,8 +323,9 @@ export default async function LandingPage() {
 
                   <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                     <span className="text-xs text-slate-500 font-medium">Have questions regarding submissions?</span>
-                    <Link href="#contact" className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-                      Contact Editorial Office &rarr;
+                    <Link href="#contact" className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-1">
+                      <span>Editorial Office</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
@@ -354,11 +365,11 @@ export default async function LandingPage() {
             </div>
 
             {currentIssue ? (
-              <div className="bg-slate-50/70 rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-8">
+              <div className="bg-slate-50/70 rounded-3xl border border-slate-200/80 shadow-card p-6 sm:p-8 space-y-8">
                 {/* Issue Header Info Card */}
                 <div className="flex flex-col md:flex-row gap-6 items-start justify-between pb-6 border-b border-slate-200/70">
                   <div className="flex items-start space-x-4">
-                    <div className="w-16 h-20 sm:w-20 sm:h-28 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-md flex items-center justify-center text-white shrink-0">
+                    <div className="w-16 h-20 sm:w-20 sm:h-28 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-md flex items-center justify-center text-white shrink-0 ring-2 ring-white">
                       <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white/90" />
                     </div>
                     <div className="space-y-1.5">
@@ -405,11 +416,11 @@ export default async function LandingPage() {
                         return (
                           <div 
                             key={art.id} 
-                            className="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                            className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 card-hover"
                           >
                             <div className="space-y-1.5 flex-grow pr-4">
                               {art.submission.section && (
-                                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
+                                <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60">
                                   {art.submission.section.name}
                                 </span>
                               )}
@@ -431,18 +442,18 @@ export default async function LandingPage() {
                             <div className="flex items-center gap-2 shrink-0">
                               <Link
                                 href={`/article/${art.id}`}
-                                className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition-colors"
+                                className="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition-colors"
                               >
-                                <Eye className="w-3.5 h-3.5 mr-1" />
+                                <Eye className="w-3.5 h-3.5 mr-1.5" />
                                 <span>Article</span>
                               </Link>
                               {pdfFile && (
                                 <a
                                   href={pdfFile.url}
                                   download={pdfFile.originalName || `${art.submission.title}.pdf`}
-                                  className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition-colors shadow-xs"
+                                  className="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition-colors shadow-xs"
                                 >
-                                  <Download className="w-3.5 h-3.5 mr-1" />
+                                  <Download className="w-3.5 h-3.5 mr-1.5" />
                                   <span>PDF</span>
                                 </a>
                               )}
@@ -452,14 +463,14 @@ export default async function LandingPage() {
                       })}
                     </div>
                   ) : (
-                    <div className="bg-white p-8 rounded-xl border border-slate-200/80 text-center text-slate-500">
+                    <div className="bg-white p-8 rounded-2xl border border-slate-200/80 text-center text-slate-500">
                       <p className="text-sm">Articles for this issue are currently in production.</p>
                     </div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-12 text-center shadow-xs">
+              <div className="bg-slate-50 rounded-3xl border border-slate-200/80 p-12 text-center shadow-card">
                 <BookOpen className="w-12 h-12 text-slate-400 mx-auto mb-3" />
                 <h3 className="text-base font-semibold text-slate-800">Inaugural Issue In Preparation</h3>
                 <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
@@ -481,7 +492,7 @@ export default async function LandingPage() {
         {/* ========================================================= */}
         {/* 4. LATEST PUBLISHED ARTICLES                              */}
         {/* ========================================================= */}
-        <section id="articles" className="py-20 bg-slate-50 border-b border-slate-200/80">
+        <section id="articles" className="py-20 bg-slate-50/70 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
               <div>
@@ -489,7 +500,7 @@ export default async function LandingPage() {
                   <FileText className="w-4 h-4" />
                   <span>Peer-Reviewed Literature</span>
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Latest Published Articles</h2>
+                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Latest Published Articles</h2>
                 <p className="text-slate-600 mt-1 text-sm sm:text-base">
                   Recently published original research, reviews, and short communications
                 </p>
@@ -521,7 +532,7 @@ export default async function LandingPage() {
                   return (
                     <div
                       key={article.id}
-                      className="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md hover:border-slate-300 card-hover flex flex-col p-6 group"
+                      className="bg-white rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover card-hover flex flex-col p-6 group transition-all"
                     >
                       {/* Top Metadata */}
                       <div className="flex items-center justify-between text-xs mb-3 pb-3 border-b border-slate-100">
@@ -626,7 +637,7 @@ export default async function LandingPage() {
                 })}
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center shadow-xs">
+              <div className="bg-white rounded-3xl border border-slate-200/80 p-12 text-center shadow-card">
                 <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4" />
                 <h3 className="text-base font-semibold text-slate-800">No Published Articles Yet</h3>
                 <p className="text-sm text-slate-500 mt-1">Articles will appear here once approved and published.</p>
@@ -637,7 +648,7 @@ export default async function LandingPage() {
               <div className="mt-12 text-center">
                 <Link
                   href="/articles"
-                  className="inline-flex items-center px-6 py-3 border border-slate-300 text-sm font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-all shadow-xs hover:shadow-md"
+                  className="inline-flex items-center px-6 py-3.5 border border-slate-300 text-sm font-semibold rounded-2xl text-slate-700 bg-white hover:bg-slate-50 hover:text-slate-900 transition-all shadow-card hover:shadow-card-hover"
                 >
                   <span>Explore Complete Articles Archive</span>
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -658,7 +669,7 @@ export default async function LandingPage() {
                   <Layers className="w-4 h-4" />
                   <span>Journal Issues</span>
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Issues Archive</h2>
+                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Issues Archive</h2>
                 <p className="text-slate-600 mt-1 text-sm sm:text-base">
                   Browse previous issues and historical volumes published by the journal.
                 </p>
@@ -678,7 +689,7 @@ export default async function LandingPage() {
                   <Link
                     key={iss.id}
                     href={`/issue/${iss.id}`}
-                    className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 hover:border-blue-300 hover:bg-blue-50/20 shadow-xs hover:shadow-md card-hover group flex flex-col justify-between transition-all"
+                    className="bg-slate-50/80 p-6 rounded-3xl border border-slate-200/80 hover:border-blue-300 hover:bg-blue-50/20 shadow-card hover:shadow-card-hover card-hover group flex flex-col justify-between transition-all"
                   >
                     <div>
                       <div className="text-xs font-bold text-blue-600 uppercase tracking-wide">
@@ -703,7 +714,7 @@ export default async function LandingPage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-slate-50 rounded-2xl border border-slate-200/80 p-8 text-center text-slate-500">
+              <div className="bg-slate-50 rounded-3xl border border-slate-200/80 p-8 text-center text-slate-500">
                 <p className="text-sm">Issues will appear in the archive once published.</p>
               </div>
             )}
@@ -713,14 +724,14 @@ export default async function LandingPage() {
         {/* ========================================================= */}
         {/* 6. EDITORIAL TEAM SECTION                                 */}
         {/* ========================================================= */}
-        <section id="editorial-team" className="py-20 bg-slate-50 border-b border-slate-200/80">
+        <section id="editorial-team" className="py-20 bg-slate-50/70 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
                 <Users className="w-4 h-4" />
                 <span>Governance & Peer Review</span>
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">Editorial Board</h2>
+              <h2 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">Editorial Board</h2>
               <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
                 Our journal is governed by an international board of recognized scholars committed to editorial integrity, rigorous peer review, and academic excellence.
               </p>
@@ -729,8 +740,8 @@ export default async function LandingPage() {
             {editorsList.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {editorsList.map((editor) => (
-                  <div key={editor.id} className="bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-xs hover:shadow-md card-hover">
-                    <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center border border-blue-200/60 shadow-xs">
+                  <div key={editor.id} className="bg-white p-6 rounded-3xl border border-slate-200/80 text-center shadow-card hover:shadow-card-hover card-hover">
+                    <div className="w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-md shadow-blue-500/25 ring-2 ring-white">
                       <Users className="w-7 h-7" />
                     </div>
                     <h3 className="font-bold text-slate-900 text-sm sm:text-base mb-1">{editor.user.name}</h3>
@@ -761,7 +772,7 @@ export default async function LandingPage() {
                 <FileCheck className="w-4 h-4" />
                 <span>For Prospective Authors</span>
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">Author Guidelines</h2>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Author Guidelines</h2>
               <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
                 Everything you need to know about preparing and submitting your manuscript to {journalName}.
               </p>
@@ -769,9 +780,9 @@ export default async function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {/* Card 1: Manuscript Preparation */}
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <div className="bg-slate-50/80 p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
                     01
                   </div>
                   <h3 className="text-base font-bold text-slate-900">Manuscript Structure</h3>
@@ -785,9 +796,9 @@ export default async function LandingPage() {
               </div>
 
               {/* Card 2: Article Types */}
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <div className="bg-slate-50/80 p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
                     02
                   </div>
                   <h3 className="text-base font-bold text-slate-900">Accepted Article Types</h3>
@@ -801,9 +812,9 @@ export default async function LandingPage() {
               </div>
 
               {/* Card 3: Formatting & References */}
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <div className="bg-slate-50/80 p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
                     03
                   </div>
                   <h3 className="text-base font-bold text-slate-900">Formatting & References</h3>
@@ -817,9 +828,9 @@ export default async function LandingPage() {
               </div>
 
               {/* Card 4: Submission Checklist */}
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <div className="bg-slate-50/80 p-6 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between">
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
                     04
                   </div>
                   <h3 className="text-base font-bold text-slate-900">Online Submission</h3>
@@ -834,9 +845,9 @@ export default async function LandingPage() {
             </div>
 
             {/* CTA Box */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200/80 p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="space-y-1 text-center sm:text-left">
-                <h4 className="text-lg font-bold text-slate-900">Ready to Submit Your Research?</h4>
+            <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-sky-50 rounded-3xl border border-blue-200/80 p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="space-y-1.5 text-center sm:text-left">
+                <h4 className="text-xl font-bold text-slate-900">Ready to Submit Your Research?</h4>
                 <p className="text-sm text-slate-600">
                   Create an author account or log in to track your manuscript through our peer review system.
                 </p>
@@ -850,7 +861,7 @@ export default async function LandingPage() {
                 </Link>
                 <Link
                   href="/login"
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-xs shadow-blue-500/20 transition-colors"
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Submit Manuscript
                 </Link>
@@ -863,14 +874,14 @@ export default async function LandingPage() {
         {/* ========================================================= */}
         {/* 8. PEER REVIEW & PUBLICATION POLICIES                     */}
         {/* ========================================================= */}
-        <section id="policies" className="py-20 bg-slate-50 border-b border-slate-200/80">
+        <section id="policies" className="py-20 bg-slate-50/70 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
                 <Scale className="w-4 h-4" />
                 <span>Publishing Ethics & Standards</span>
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">Peer Review & Publication Policies</h2>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Peer Review & Publication Policies</h2>
               <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
                 We uphold the highest standards of publication ethics, rigor, transparency, and research integrity.
               </p>
@@ -879,8 +890,8 @@ export default async function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
               {/* Double-Blind Peer Review */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Double-Blind Peer Review</h3>
@@ -890,8 +901,8 @@ export default async function LandingPage() {
               </div>
 
               {/* Publication Ethics (COPE) */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <Award className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">COPE Publication Ethics</h3>
@@ -901,8 +912,8 @@ export default async function LandingPage() {
               </div>
 
               {/* Plagiarism & Similarity Policy */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
                   <FileText className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Plagiarism Screening</h3>
@@ -912,8 +923,8 @@ export default async function LandingPage() {
               </div>
 
               {/* Conflict of Interest */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
                   <Scale className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Conflict of Interest</h3>
@@ -923,8 +934,8 @@ export default async function LandingPage() {
               </div>
 
               {/* Open Access & CC-BY Licensing */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
                   <Globe className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Open Access Licensing</h3>
@@ -934,8 +945,8 @@ export default async function LandingPage() {
               </div>
 
               {/* Research Data & Archiving */}
-              <div className="bg-white p-7 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <div className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all space-y-3">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                   <Layers className="w-5 h-5" />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">Data Sharing & Archiving</h3>
@@ -951,7 +962,7 @@ export default async function LandingPage() {
         {/* ========================================================= */}
         {/* 9. SEARCH & ANNOUNCEMENTS SECTION                         */}
         {/* ========================================================= */}
-        <section id="search" className="py-16 bg-gradient-to-r from-blue-600 to-indigo-700 text-white border-y border-blue-700 shadow-inner">
+        <section id="search" className="py-16 bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white border-y border-blue-700 shadow-inner">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               
@@ -970,11 +981,11 @@ export default async function LandingPage() {
                     type="text" 
                     name="q"
                     placeholder="Search articles, authors, keywords..." 
-                    className="w-full bg-white text-slate-900 px-5 py-3.5 rounded-xl pr-14 focus:outline-none focus:ring-4 focus:ring-blue-400/40 text-sm shadow-md"
+                    className="w-full bg-white text-slate-900 px-5 py-3.5 rounded-2xl pr-14 focus:outline-none focus:ring-4 focus:ring-blue-400/40 text-sm shadow-md"
                   />
                   <button 
                     type="submit" 
-                    className="absolute right-1.5 top-1.5 bottom-1.5 bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center shadow-xs"
+                    className="absolute right-1.5 top-1.5 bottom-1.5 bg-blue-600 text-white px-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center shadow-xs"
                   >
                     <Search className="w-4 h-4" />
                   </button>
@@ -982,20 +993,20 @@ export default async function LandingPage() {
               </div>
               
               {/* Important Announcements */}
-              <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 shadow-xl">
+              <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-xl">
                 <h3 className="text-xl font-bold mb-6 flex items-center">
                   <ShieldCheck className="w-5 h-5 mr-2 text-blue-200" />
                   Public Announcements
                 </h3>
                 <div className="space-y-4">
-                  <div className="bg-black/10 backdrop-blur-xs p-4 rounded-xl border border-white/10">
+                  <div className="bg-black/10 backdrop-blur-xs p-4 rounded-2xl border border-white/10">
                     <span className="text-xs font-bold text-blue-200 uppercase tracking-wider block mb-1">Call for Papers</span>
                     <h4 className="font-bold mb-1 text-sm">Special Issue on Advanced Security & Privacy</h4>
                     <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
                       Manuscripts are invited for our upcoming special issue covering zero-knowledge proofs, post-quantum cryptography, and AI privacy.
                     </p>
                   </div>
-                  <div className="bg-black/10 backdrop-blur-xs p-4 rounded-xl border border-white/10">
+                  <div className="bg-black/10 backdrop-blur-xs p-4 rounded-2xl border border-white/10">
                     <span className="text-xs font-bold text-blue-200 uppercase tracking-wider block mb-1">Editorial Policy</span>
                     <h4 className="font-bold mb-1 text-sm">Updated Anonymization Guidelines for Authors</h4>
                     <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
@@ -1016,23 +1027,23 @@ export default async function LandingPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Journal Metrics & Community</h3>
-              <p className="text-xl font-bold text-slate-900 mt-1">Real-Time Publishing Statistics</p>
+              <p className="text-2xl font-black text-slate-900 mt-1">Real-Time Publishing Statistics</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-xs">
-                <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-1">{totalArticles}</div>
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all">
+                <div className="text-3xl sm:text-4xl font-black text-blue-600 mb-1">{totalArticles}</div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Published Articles</div>
               </div>
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-xs">
-                <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-1">{totalIssues}</div>
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all">
+                <div className="text-3xl sm:text-4xl font-black text-blue-600 mb-1">{totalIssues}</div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Published Issues</div>
               </div>
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-xs">
-                <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-1">{totalAuthors}</div>
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all">
+                <div className="text-3xl sm:text-4xl font-black text-blue-600 mb-1">{totalAuthors}</div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Registered Authors</div>
               </div>
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-xs">
-                <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 mb-1">{totalSubmissions}</div>
+              <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-card hover:shadow-card-hover transition-all">
+                <div className="text-3xl sm:text-4xl font-black text-blue-600 mb-1">{totalSubmissions}</div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Manuscripts Processed</div>
               </div>
             </div>

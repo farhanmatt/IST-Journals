@@ -121,26 +121,26 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex items-start gap-4 mb-2">
         <BackButton />
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="text-2xl font-bold text-slate-900 break-words">{submission.title || "Untitled"}</h1>
-            <span className={`shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight break-words">{submission.title || "Untitled"}</h1>
+            <span className={`shrink-0 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border shadow-2xs ${
               submission.status === "REJECTED" || submission.status === "DESK_REJECTED"
-                ? "bg-red-100 text-red-800"
+                ? "bg-rose-50 text-rose-700 border-rose-200/80"
                 : submission.status === "ACCEPTED" || submission.status === "PUBLISHED"
-                ? "bg-emerald-100 text-emerald-800"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-200/80"
                 : submission.status === "REVISION_REQUIRED"
-                ? "bg-amber-100 text-amber-800"
-                : "bg-blue-100 text-blue-800"
+                ? "bg-amber-50 text-amber-800 border-amber-200/80"
+                : "bg-blue-50 text-blue-700 border-blue-200/80"
             }`}>
               {submission.status.replace(/_/g, ' ')}
             </span>
           </div>
-          <p className="text-slate-500 text-xs mt-1">
-            ID: <span className="font-mono font-medium text-slate-700">{submission.submissionId}</span> • Submitted on {formatDateTime(submission.createdAt)}
+          <p className="text-slate-500 text-xs sm:text-sm mt-1">
+            ID: <span className="font-mono font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">{submission.submissionId}</span> • Submitted on {formatDateTime(submission.createdAt)}
           </p>
         </div>
       </div>
@@ -148,27 +148,27 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
+          <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6 sm:p-7 space-y-6">
             <div>
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Abstract</h3>
-              <p className="text-slate-700 whitespace-pre-wrap">{submission.abstract || "No abstract provided."}</p>
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Abstract</h3>
+              <p className="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">{submission.abstract || "No abstract provided."}</p>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
               <div>
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Keywords</h3>
-                <p className="text-slate-700">{submission.keywords || "None"}</p>
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Keywords</h3>
+                <p className="text-slate-700 text-sm font-medium">{submission.keywords || "None"}</p>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Section</h3>
-                <p className="text-slate-700">{submission.section?.name || "Unassigned"}</p>
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Section</h3>
+                <span className="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 font-semibold text-xs">{submission.section?.name || "Unassigned"}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Manuscript & Workflow Files</h3>
+          <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6 sm:p-7">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Manuscript & Workflow Files</h3>
               <div className="flex items-center gap-2">
                 {submission.files.some(f => f.type === "PRODUCTION_READY_PDF") && (
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
@@ -281,9 +281,9 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
           </div>
           
           {/* Peer Review Reports */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+          <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6 sm:p-7 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Peer Review Reports ({submission.reviewerAssignments.filter(r => r.status === "SUBMITTED").length} Completed)
               </h3>
             </div>
@@ -291,10 +291,10 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
             {submission.reviewerAssignments.length > 0 ? (
               <div className="space-y-4">
                 {submission.reviewerAssignments.map((rev) => (
-                  <div key={rev.id} className="border border-slate-200 rounded-xl p-5 bg-slate-50/50 space-y-4">
+                  <div key={rev.id} className="border border-slate-200/90 rounded-2xl p-5 bg-slate-50/60 space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
                       <div>
-                        <span className="font-semibold text-slate-900 text-base">{rev.reviewer.name}</span>
+                        <span className="font-bold text-slate-900 text-base">{rev.reviewer.name}</span>
                         <span className="text-xs text-slate-500 ml-2">({rev.reviewer.email})</span>
                         <p className="text-xs text-slate-500 mt-0.5">
                           {rev.submittedAt 
@@ -332,18 +332,18 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
                           <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
                             Comments for the Author
                           </h4>
-                          <div className="bg-white p-4 rounded-lg border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap">
+                          <div className="bg-white p-4 rounded-xl border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
                             {rev.commentsForAuthor || <span className="italic text-slate-400">No comments provided for author.</span>}
                           </div>
                         </div>
 
                         {rev.commentsForEditor && (
                           <div>
-                            <h4 className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1.5 flex items-center">
+                            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1.5 flex items-center">
                               <span className="w-2 h-2 rounded-full bg-amber-500 mr-1.5"></span>
                               Confidential Comments for Editor (Hidden from Author)
                             </h4>
-                            <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-200 text-sm text-amber-950 whitespace-pre-wrap">
+                            <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 text-sm text-amber-950 whitespace-pre-wrap leading-relaxed">
                               {rev.commentsForEditor}
                             </div>
                           </div>
@@ -362,17 +362,17 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
           
           {/* Author Revision History & Rebuttals */}
           {submission.revisions && submission.revisions.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+            <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6 sm:p-7 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Author Revision History & Rebuttals ({submission.revisions.length})
                 </h3>
               </div>
               <div className="space-y-4">
                 {submission.revisions.map((rev) => (
-                  <div key={rev.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                    <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-                      <span className="font-semibold text-slate-900 text-sm">
+                  <div key={rev.id} className="p-5 bg-slate-50/60 rounded-2xl border border-slate-200 space-y-3">
+                    <div className="flex justify-between items-center pb-2 border-b border-slate-200/80">
+                      <span className="font-bold text-slate-900 text-sm">
                         Revision Version {rev.versionNumber} Rebuttal
                       </span>
                       <span className="text-xs text-slate-500">
@@ -383,7 +383,7 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
                       <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
                         Response to Reviewer & Editor Comments
                       </h4>
-                      <div className="bg-white p-3.5 rounded-lg border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
                         {rev.responseToReviewers || <span className="italic text-slate-400">No written rebuttal provided.</span>}
                       </div>
                     </div>
@@ -394,11 +394,11 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
           )}
           
           {submission.decisions.length > 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Decision History</h3>
+            <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6 sm:p-7">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Decision History</h3>
               <div className="space-y-4">
                 {submission.decisions.map(dec => (
-                  <div key={dec.id} className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                  <div key={dec.id} className="p-4 bg-slate-50/60 rounded-xl border border-slate-200/80">
                     <div className="flex justify-between items-start mb-2">
                       <span className="font-bold text-slate-900">{dec.decision.replace(/_/g, ' ')}</span>
                       <span className="text-xs text-slate-500">{dec.createdAt.toLocaleDateString()}</span>
@@ -406,13 +406,13 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
                     {dec.commentsForAuthor && (
                       <div className="mb-2">
                         <span className="text-xs font-semibold text-slate-500">Comments to Author:</span>
-                        <p className="text-sm text-slate-700 mt-1">{dec.commentsForAuthor}</p>
+                        <p className="text-sm text-slate-700 mt-1 leading-relaxed">{dec.commentsForAuthor}</p>
                       </div>
                     )}
                     {dec.internalComments && (
                       <div>
                         <span className="text-xs font-semibold text-slate-500">Internal Comments:</span>
-                        <p className="text-sm text-slate-700 mt-1 bg-amber-50 p-2 rounded">{dec.internalComments}</p>
+                        <p className="text-sm text-slate-700 mt-1 bg-amber-50/80 p-2.5 rounded-lg border border-amber-200/60">{dec.internalComments}</p>
                       </div>
                     )}
                   </div>
@@ -424,16 +424,16 @@ export default async function SubmissionDetailsPage({ params }: { params: { id: 
 
         {/* Sidebar Actions & Info */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Authors</h3>
+          <div className="bg-white rounded-2xl shadow-card border border-slate-200/80 p-6">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Authors</h3>
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-slate-900">{submission.author.name} (Corresponding)</p>
+                <p className="text-sm font-semibold text-slate-900">{submission.author.name} (Corresponding)</p>
                 <p className="text-xs text-slate-500">{submission.author.email}</p>
               </div>
               {submission.coAuthors.map(co => (
-                <div key={co.id}>
-                  <p className="text-sm font-medium text-slate-900">{co.firstName} {co.lastName}</p>
+                <div key={co.id} className="pt-2 border-t border-slate-100">
+                  <p className="text-sm font-semibold text-slate-900">{co.firstName} {co.lastName}</p>
                   <p className="text-xs text-slate-500">{co.affiliation}</p>
                 </div>
               ))}

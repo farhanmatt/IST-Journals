@@ -40,16 +40,16 @@ export default async function AuthorDecisionsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-200">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Editorial Decisions</h1>
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Editorial Decisions</h1>
         <p className="text-slate-500 text-xs sm:text-sm mt-1">Official editorial decisions and feedback for your manuscripts.</p>
       </div>
 
       {submissions.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-12 text-center">
-          <div className="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-3">
-            <BookOpen className="w-6 h-6" />
+        <div className="bg-white rounded-3xl shadow-card border border-slate-200/80 p-14 text-center">
+          <div className="w-14 h-14 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-3.5 border border-slate-200/80">
+            <BookOpen className="w-7 h-7 text-slate-400" />
           </div>
           <h3 className="text-base font-bold text-slate-900 mb-1">No Decisions Yet</h3>
           <p className="text-slate-500 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
@@ -59,7 +59,6 @@ export default async function AuthorDecisionsPage() {
       ) : (
         <div className="space-y-6">
           {submissions.map((sub) => {
-            const latestDecision = sub.decisions[0];
             const isAccepted = sub.status === "ACCEPTED" || sub.status === "PUBLISHED";
             const isRejected = sub.status === "REJECTED" || sub.status === "DESK_REJECTED";
             const isRevisionRequired = sub.status === "REVISION_REQUIRED";
@@ -67,28 +66,28 @@ export default async function AuthorDecisionsPage() {
             return (
               <div 
                 key={sub.id}
-                className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden"
+                className="bg-white rounded-3xl shadow-card border border-slate-200/80 overflow-hidden"
               >
                 {/* Header */}
-                <div className="p-5 sm:p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="space-y-1 flex-1 min-w-0">
+                <div className="p-6 sm:p-7 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border shadow-2xs ${
                         isAccepted 
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                           : isRejected 
-                          ? "bg-red-100 text-red-800"
+                          ? "bg-rose-50 text-rose-800 border-rose-200"
                           : isRevisionRequired 
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-blue-100 text-blue-800"
+                          ? "bg-amber-50 text-amber-800 border-amber-200"
+                          : "bg-blue-50 text-blue-800 border-blue-200"
                       }`}>
                         {sub.status.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-xs font-mono font-medium text-slate-500">ID: {sub.submissionId}</span>
-                      <span className="text-xs text-slate-400">• Submitted {new Date(sub.createdAt).toLocaleDateString()}</span>
+                      <span className="text-xs font-mono font-bold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-slate-200/70">ID: {sub.submissionId}</span>
+                      <span className="text-xs text-slate-400 font-medium">• Submitted {new Date(sub.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">{sub.title || "Untitled Manuscript"}</h2>
-                    <p className="text-xs text-slate-500">Section: {sub.section?.name || "General"}</p>
+                    <h2 className="text-lg font-bold text-slate-900 leading-snug">{sub.title || "Untitled Manuscript"}</h2>
+                    <p className="text-xs text-slate-500 font-medium">Section: {sub.section?.name || "General"}</p>
                   </div>
 
                   {/* Quick Action */}
@@ -96,7 +95,7 @@ export default async function AuthorDecisionsPage() {
                     {(sub.status === "REJECTED" || sub.status === "DESK_REJECTED") && (
                       <Link
                         href="/author/submit"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors"
                       >
                         <span>Submit New Manuscript</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -105,7 +104,7 @@ export default async function AuthorDecisionsPage() {
                     {isRevisionRequired && (
                       <Link
                         href={`/author/revisions?id=${sub.id}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-sm shadow-amber-600/20 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-amber-600/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                       >
                         <span>Submit Revision</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -114,7 +113,7 @@ export default async function AuthorDecisionsPage() {
                     {sub.publishedArticle && (
                       <Link
                         href={`/article/${sub.publishedArticle.id}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-sm shadow-blue-600/20 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-blue-600/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                       >
                         <Globe className="w-3.5 h-3.5" />
                         <span>View Published Article</span>
@@ -124,8 +123,8 @@ export default async function AuthorDecisionsPage() {
                 </div>
 
                 {/* Decisions Timeline / History */}
-                <div className="p-5 sm:p-6 space-y-4">
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div className="p-6 sm:p-7 space-y-4">
+                  <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                     Decision Details & Editorial Instructions
                   </h3>
 
@@ -140,26 +139,26 @@ export default async function AuthorDecisionsPage() {
                         return (
                           <div 
                             key={dec.id} 
-                            className={`p-5 rounded-2xl border space-y-3 ${
+                            className={`p-6 rounded-2xl border space-y-3.5 ${
                               isDecAccept 
                                 ? "bg-emerald-50/50 border-emerald-200/80" 
                                 : isDecReject 
-                                ? "bg-red-50/50 border-red-200/80" 
+                                ? "bg-rose-50/50 border-rose-200/80" 
                                 : isDecMajor 
                                 ? "bg-orange-50/50 border-orange-200/80" 
                                 : "bg-amber-50/50 border-amber-200/80"
                             }`}
                           >
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200/60">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-200/60">
                               <div className="flex items-center gap-2">
                                 {isDecAccept && <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-                                {isDecReject && <XCircle className="w-5 h-5 text-red-600" />}
+                                {isDecReject && <XCircle className="w-5 h-5 text-rose-600" />}
                                 {(isDecMinor || isDecMajor) && <AlertCircle className="w-5 h-5 text-amber-600" />}
                                 <span className="font-bold text-slate-900 text-sm">
                                   {dec.decision.replace(/_/g, ' ')}
                                 </span>
                                 {dec.editor?.name && (
-                                  <span className="text-xs text-slate-500">• Handling Editor: {dec.editor.name}</span>
+                                  <span className="text-xs text-slate-500 font-medium">• Handling Editor: {dec.editor.name}</span>
                                 )}
                               </div>
                               <span className="text-xs text-slate-500 font-medium">
@@ -170,10 +169,10 @@ export default async function AuthorDecisionsPage() {
                             {/* Author-facing comments */}
                             {dec.commentsForAuthor ? (
                               <div>
-                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">
+                                <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                                   Editor Comments:
                                 </h4>
-                                <div className="bg-white p-4 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
+                                <div className="bg-white p-4.5 rounded-2xl border border-slate-200 text-xs sm:text-sm text-slate-800 whitespace-pre-wrap leading-relaxed shadow-2xs">
                                   {dec.commentsForAuthor}
                                 </div>
                               </div>
@@ -183,13 +182,13 @@ export default async function AuthorDecisionsPage() {
 
                             {/* Status context notice */}
                             {isDecReject && (
-                              <div className="pt-2 border-t border-red-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <p className="text-xs text-red-700 font-medium leading-relaxed">
+                              <div className="pt-2 border-t border-rose-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <p className="text-xs text-rose-700 font-medium leading-relaxed">
                                   Notice: This manuscript has been rejected and cannot be modified or re-uploaded. To submit this paper again, please create a new submission.
                                 </p>
                                 <Link
                                   href="/author/submit"
-                                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-xl shadow-sm shadow-red-600/20 transition-colors shrink-0"
+                                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors shrink-0"
                                 >
                                   <span>Submit As New Manuscript</span>
                                   <ArrowRight className="w-3.5 h-3.5" />

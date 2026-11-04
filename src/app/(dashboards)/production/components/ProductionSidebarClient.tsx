@@ -23,14 +23,25 @@ export function ProductionSidebarClient({ user }: { user?: { name?: string | nul
   const pathname = usePathname();
 
   return (
-    <div className="w-full h-full bg-slate-900 text-slate-300 flex flex-col border-r border-slate-800">
-      <div className="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800 shrink-0">
-        <Printer className="w-6 h-6 text-indigo-500 mr-3" />
-        <span className="font-bold text-white tracking-wide">Production Editor</span>
+    <div className="w-full h-full bg-slate-950 text-slate-300 flex flex-col border-r border-slate-800/80">
+      <div className="h-16 flex items-center px-6 bg-slate-950/80 border-b border-slate-800/80 shrink-0">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/25 ring-1 ring-white/20">
+            <Printer className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xs font-black text-white tracking-[0.18em] uppercase">
+              Production
+            </h2>
+            <p className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">
+              Galley & Typesetting
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-6 px-4">
-        <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Navigation</p>
+      <div className="flex-1 overflow-y-auto py-5 px-3 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+        <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Navigation</p>
         <nav className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -40,14 +51,14 @@ export function ProductionSidebarClient({ user }: { user?: { name?: string | nul
                 key={item.label}
                 href={item.href}
                 prefetch={true}
-                className={`flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                   isActive
-                    ? "bg-indigo-600 text-white"
-                    : "hover:bg-slate-800 hover:text-white"
+                    ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/25 ring-1 ring-white/10"
+                    : "text-slate-400 hover:bg-slate-800/70 hover:text-white"
                 }`}
               >
-                <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-indigo-200" : "text-slate-400"}`} />
-                {item.label}
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}

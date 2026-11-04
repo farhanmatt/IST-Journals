@@ -3,6 +3,9 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import { sendPasswordNotificationEmail } from "@/lib/mail";
 
 export async function createUser(formData: FormData) {
   try {
@@ -85,5 +88,82 @@ export async function updateRolePermissions(role: string, permissions: string[])
   } catch (error: any) {
     console.error("Error updating permissions:", error);
     return { success: false, error: "Failed to update permissions." };
+  }
+}
+
+export async function changeUserPassword(userId: string, newPassword: string, sendEmail: boolean = true) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.roles?.includes("ADMIN")) {
+      return { success: false, error: "Unauthorized. Admin privileges are required." };
+    }
+
+    if (!userId || !newPassword) {
+      return { success: false, error: "User ID and new password are required." };
+    }
+
+    if (newPassword.trim().length < 6) {
+      return { success: false, error: "Password must be at least 6 characters long." };
+    }
+
+    // Verify user exists and check roles
+    const targetUser = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { roles: true },
+    });
+
+    if (!targetUser) {
+      return { success: false, error: "User not found." };
+    }
+
+    // Strict rule: Do not allow changing password for users with the Author role
+    const isAuthor = targetUser.roles.some((r) => r.role === "AUTHOR");
+    if (isAuthor) {
+      return { success: false, error: "Password changes are disabled for users with the Author role." };
+    }
+
+    const cleanPassword = newPassword.trim();
+    const passwordHash = await bcrypt.hash(cleanPassword, 10);
+
+    // Update only the selected user
+    await prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+    });
+
+    // Optionally send credentials to the user's Gmail
+    let emailSent = false;
+    let emailError: string | undefined = undefined;
+
+    if (sendEmail && targetUser.email) {
+      const emailResult = await sendPasswordNotificationEmail({
+        to: targetUser.email,
+        userName: targetUser.name || "User",
+        newPassword: cleanPassword,
+        adminName: session.user.name || session.user.email || "System Administrator",
+      });
+
+      emailSent = emailResult.success;
+      emailError = emailResult.error;
+    }
+
+    await prisma.auditLog.create({
+      data: {
+        action: `Admin (${session.user.name || session.user.email}) changed password for user: ${targetUser.name} (${targetUser.email}). Email sent: ${emailSent ? "Yes" : "No"}${emailError ? ` (${emailError})` : ""}`,
+        userId: session.user.id,
+      },
+    });
+
+    revalidatePath("/admin/dashboard/users");
+
+    return { 
+      success: true, 
+      emailSent,
+      emailError,
+      recipientEmail: targetUser.email,
+    };
+  } catch (error: any) {
+    console.error("Error changing user password:", error);
+    return { success: false, error: error.message || "Failed to change user password." };
   }
 }
