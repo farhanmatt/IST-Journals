@@ -14,10 +14,13 @@ if (process.env.NODE_ENV === "production") {
   }
 }
 
-const authSecret =
+const authSecret = (
   process.env.NEXTAUTH_SECRET ||
   process.env.AUTH_SECRET ||
-  "ist-journals-auth-secret-key-production-neon-db-398471923";
+  "ist-journals-auth-secret-key-production-neon-db-398471923"
+).trim().replace(/^["']|["']$/g, "");
+
+export { authSecret };
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,

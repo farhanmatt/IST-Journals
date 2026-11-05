@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { decode } from "next-auth/jwt";
 
-const authSecret =
+const authSecret = (
   process.env.NEXTAUTH_SECRET ||
   process.env.AUTH_SECRET ||
-  "ist-journals-auth-secret-key-production-neon-db-398471923";
+  "ist-journals-auth-secret-key-production-neon-db-398471923"
+).trim().replace(/^["']|["']$/g, "");
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -15,10 +16,20 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Detect session token supporting both HTTPS (__Secure-) and HTTP standard cookies
-  let token = await getToken({ req, secret: authSecret, secureCookie: true });
-  if (!token) {
-    token = await getToken({ req, secret: authSecret, secureCookie: false });
+  // Detect session token supporting all cookie variants (secure, non-secure, chunked)
+  const allCookies = req.cookies.getAll();
+  const sessionCookie =
+    req.cookies.get("__Secure-next-auth.session-token")?.value ||
+    req.cookies.get("next-auth.session-token")?.value ||
+    allCookies.find((c) => c.name.includes("session-token"))?.value;
+
+  let token: any = null;
+  if (sessionCookie) {
+    try {
+      token = await decode({ token: sessionCookie, secret: authSecret });
+    } catch {
+      // Decode fallback
+    }
   }
 
   // If not authenticated, redirect to appropriate login portal
@@ -39,7 +50,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Check Editor routes
-  if (pathname.startsWith("/editor") && !roles.some(r => ["ADMIN", "EDITOR", "SECTION_EDITOR"].includes(r))) {
+  if (pathname.startsWith("/editor") && !roles.some((r) => ["ADMIN", "EDITOR", "SECTION_EDITOR"].includes(r))) {
     return NextResponse.rewrite(new URL("/unauthorized", req.url));
   }
 
@@ -54,12 +65,12 @@ export async function middleware(req: NextRequest) {
   }
 
   // Check Copyeditor routes
-  if (pathname.startsWith("/copyeditor") && !roles.some(r => ["ADMIN", "COPYEDITOR"].includes(r))) {
+  if (pathname.startsWith("/copyeditor") && !roles.some((r) => ["ADMIN", "COPYEDITOR"].includes(r))) {
     return NextResponse.rewrite(new URL("/unauthorized", req.url));
   }
 
   // Check Production Editor routes
-  if (pathname.startsWith("/production") && !roles.some(r => ["ADMIN", "PRODUCTION_EDITOR"].includes(r))) {
+  if (pathname.startsWith("/production") && !roles.some((r) => ["ADMIN", "PRODUCTION_EDITOR"].includes(r))) {
     return NextResponse.rewrite(new URL("/unauthorized", req.url));
   }
 
