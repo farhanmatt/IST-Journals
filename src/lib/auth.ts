@@ -21,6 +21,7 @@ const authSecret =
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,
+  useSecureCookies: process.env.NODE_ENV === "production",
   providers: [
     CredentialsProvider({
       name: "Credentials",

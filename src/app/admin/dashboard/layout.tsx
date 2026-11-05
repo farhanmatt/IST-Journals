@@ -12,7 +12,11 @@ export default async function AdminDashboardLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.user?.roles?.includes("ADMIN")) {
+  if (!session) {
+    redirect("/admin");
+  }
+
+  if (!session.user?.roles?.includes("ADMIN")) {
     redirect("/unauthorized");
   }
 

@@ -25,7 +25,7 @@ export default function AdminLoginPage() {
       redirect: false,
     });
 
-    if (result?.error) {
+    if (result?.error || !result?.ok) {
       setError("Invalid administrator credentials. Please try again.");
       setIsLoading(false);
     } else {
