@@ -65,16 +65,21 @@ export async function POST(request: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = `${submissionId}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'manuscripts');
+    let uploadDir = path.join(process.cwd(), 'public', 'uploads', 'manuscripts');
     
     try {
-      await fs.access(uploadDir);
-    } catch {
       await fs.mkdir(uploadDir, { recursive: true });
+      await fs.writeFile(path.join(uploadDir, fileName), buffer);
+    } catch (err: any) {
+      // In serverless / read-only production environments like Vercel, fallback to /tmp
+      if (err.code === 'EROFS' || err.code === 'EPERM' || err.code === 'EACCES') {
+        uploadDir = path.join('/tmp', 'uploads', 'manuscripts');
+        await fs.mkdir(uploadDir, { recursive: true });
+        await fs.writeFile(path.join(uploadDir, fileName), buffer);
+      } else {
+        throw err;
+      }
     }
-
-    const filePath = path.join(uploadDir, fileName);
-    await fs.writeFile(filePath, buffer);
 
     const fileUrl = `/uploads/manuscripts/${fileName}`;
 

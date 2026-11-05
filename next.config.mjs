@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || "ist-journals-auth-secret-key-production-neon-db-398471923",
+    AUTH_TRUST_HOST: "true",
+  },
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,

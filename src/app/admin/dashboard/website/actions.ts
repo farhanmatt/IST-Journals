@@ -28,16 +28,21 @@ export async function updateWebsiteSettings(formData: FormData) {
 
         const buffer = Buffer.from(await file.arrayBuffer());
         const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`;
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+        let uploadDir = path.join(process.cwd(), 'public', 'uploads');
         
         try {
-          await fs.access(uploadDir);
-        } catch {
           await fs.mkdir(uploadDir, { recursive: true });
+          await fs.writeFile(path.join(uploadDir, fileName), buffer);
+        } catch (err: any) {
+          if (err.code === 'EROFS' || err.code === 'EPERM' || err.code === 'EACCES') {
+            uploadDir = path.join('/tmp', 'uploads');
+            await fs.mkdir(uploadDir, { recursive: true });
+            await fs.writeFile(path.join(uploadDir, fileName), buffer);
+          } else {
+            throw err;
+          }
         }
 
-        const filePath = path.join(uploadDir, fileName);
-        await fs.writeFile(filePath, buffer);
         value = `/uploads/${fileName}`;
       } else {
         value = value?.toString() || "";

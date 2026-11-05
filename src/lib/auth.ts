@@ -24,7 +24,11 @@ export { authSecret };
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,
-  useSecureCookies: process.env.NODE_ENV === "production",
+  useSecureCookies:
+    process.env.NODE_ENV === "production" &&
+    (process.env.VERCEL === "1" ||
+      process.env.NEXTAUTH_URL?.startsWith("https://") ||
+      process.env.NEXT_PUBLIC_VERCEL_ENV === "production"),
   providers: [
     CredentialsProvider({
       name: "Credentials",

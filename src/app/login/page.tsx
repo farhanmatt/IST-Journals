@@ -1,18 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BookOpen, Eye, EyeOff, Loader2, AlertCircle, ArrowRight, ShieldCheck, CheckCircle2, Lock, Mail } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: sessionData, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated" && sessionData?.user?.roles?.length) {
+      const roles = sessionData.user.roles;
+      let target = "/";
+      if (roles.includes("ADMIN")) {
+        target = "/admin/dashboard";
+      } else if (roles.includes("EDITOR")) {
+        target = "/editor/dashboard";
+      } else if (roles.includes("COPYEDITOR")) {
+        target = "/copyeditor/dashboard";
+      } else if (roles.includes("PRODUCTION_EDITOR")) {
+        target = "/production/dashboard";
+      } else if (roles.includes("REVIEWER")) {
+        target = "/reviewer/dashboard";
+      } else if (roles.includes("AUTHOR")) {
+        target = "/author/dashboard";
+      } else if (roles.includes("JOURNAL_MANAGER")) {
+        target = "/journal-manager/dashboard";
+      } else if (roles.length > 0) {
+        target = `/${roles[0].toLowerCase().replace('_', '-')}/dashboard`;
+      }
+      window.location.href = target;
+    }
+  }, [status, sessionData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,31 +51,44 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    if (result?.error) {
+    if (result?.error || !result?.ok) {
       setError("Invalid email or password. Please verify your credentials.");
       setIsLoading(false);
     } else {
-      const res = await fetch("/api/auth/session");
-      const session = await res.json();
+      let session: any = null;
+      try {
+        const res = await fetch("/api/auth/session", { cache: "no-store" });
+        session = await res.json();
+      } catch {
+        // fallback to getSession
+      }
+      if (!session?.user?.roles) {
+        try {
+          session = await getSession();
+        } catch {}
+      }
       const roles = session?.user?.roles || [];
       
+      let target = "/";
       if (roles.includes("ADMIN")) {
-         router.push("/admin/dashboard");
+        target = "/admin/dashboard";
       } else if (roles.includes("EDITOR")) {
-         router.push("/editor/dashboard");
+        target = "/editor/dashboard";
       } else if (roles.includes("COPYEDITOR")) {
-         router.push("/copyeditor/dashboard");
+        target = "/copyeditor/dashboard";
       } else if (roles.includes("PRODUCTION_EDITOR")) {
-         router.push("/production/dashboard");
+        target = "/production/dashboard";
       } else if (roles.includes("REVIEWER")) {
-         router.push("/reviewer/dashboard");
+        target = "/reviewer/dashboard";
       } else if (roles.includes("AUTHOR")) {
-         router.push("/author/dashboard");
+        target = "/author/dashboard";
+      } else if (roles.includes("JOURNAL_MANAGER")) {
+        target = "/journal-manager/dashboard";
       } else if (roles.length > 0) {
-         router.push(`/${roles[0].toLowerCase().replace('_', '-')}/dashboard`);
-      } else {
-         router.push("/");
+        target = `/${roles[0].toLowerCase().replace('_', '-')}/dashboard`;
       }
+
+      window.location.href = target;
     }
   };
 

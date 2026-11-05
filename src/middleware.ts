@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { decode } from "next-auth/jwt";
+import { getToken, decode } from "next-auth/jwt";
 
-const authSecret = (
-  process.env.NEXTAUTH_SECRET ||
-  process.env.AUTH_SECRET ||
-  "ist-journals-auth-secret-key-production-neon-db-398471923"
-).trim().replace(/^["']|["']$/g, "");
+const CANDIDATE_SECRETS = [
+  process.env.NEXTAUTH_SECRET,
+  process.env.AUTH_SECRET,
+  "ist-journals-auth-secret-key-production-neon-db-398471923",
+  "super-secret-key-for-dev",
+]
+  .filter((s): s is string => typeof s === "string" && s.trim().length > 0)
+  .map((s) => s.trim().replace(/^["']|["']$/g, ""));
+
+const uniqueSecrets = Array.from(new Set(CANDIDATE_SECRETS));
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -17,18 +22,53 @@ export async function middleware(req: NextRequest) {
   }
 
   // Detect session token supporting all cookie variants (secure, non-secure, chunked)
-  const allCookies = req.cookies.getAll();
-  const sessionCookie =
-    req.cookies.get("__Secure-next-auth.session-token")?.value ||
-    req.cookies.get("next-auth.session-token")?.value ||
-    allCookies.find((c) => c.name.includes("session-token"))?.value;
-
   let token: any = null;
-  if (sessionCookie) {
+
+  for (const secret of uniqueSecrets) {
     try {
-      token = await decode({ token: sessionCookie, secret: authSecret });
-    } catch {
-      // Decode fallback
+      token = await getToken({ req, secret, secureCookie: true });
+    } catch {}
+    if (token) break;
+
+    try {
+      token = await getToken({ req, secret, secureCookie: false });
+    } catch {}
+    if (token) break;
+
+    try {
+      token = await getToken({ req, secret, cookieName: "__Secure-next-auth.session-token" });
+    } catch {}
+    if (token) break;
+
+    try {
+      token = await getToken({ req, secret, cookieName: "next-auth.session-token" });
+    } catch {}
+    if (token) break;
+  }
+
+  // Fallback: manual cookie decode if getToken somehow missed custom-named chunks
+  if (!token) {
+    const allCookies = req.cookies.getAll();
+    const sessionChunks = allCookies
+      .filter((c) => c.name.includes("session-token"))
+      .sort((a, b) => {
+        const aSuffix = parseInt(a.name.split(".").pop() || "0", 10) || 0;
+        const bSuffix = parseInt(b.name.split(".").pop() || "0", 10) || 0;
+        return aSuffix - bSuffix;
+      });
+
+    const sessionCookie =
+      req.cookies.get("__Secure-next-auth.session-token")?.value ||
+      req.cookies.get("next-auth.session-token")?.value ||
+      sessionChunks.map((c) => c.value).join("");
+
+    if (sessionCookie) {
+      for (const secret of uniqueSecrets) {
+        try {
+          token = await decode({ token: sessionCookie, secret });
+          if (token) break;
+        } catch {}
+      }
     }
   }
 
@@ -74,6 +114,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/unauthorized", req.url));
   }
 
+  // Check Journal Manager routes
+  if (pathname.startsWith("/journal-manager") && !roles.some((r) => ["ADMIN", "JOURNAL_MANAGER"].includes(r))) {
+    return NextResponse.rewrite(new URL("/unauthorized", req.url));
+  }
+
   const isRsc = req.headers.get("rsc") === "1" || req.nextUrl.searchParams.has("_rsc");
   const response = NextResponse.next();
 
@@ -93,6 +138,7 @@ export const config = {
     "/editor/:path*", 
     "/reviewer/:path*", 
     "/copyeditor/:path*", 
-    "/production/:path*"
+    "/production/:path*",
+    "/journal-manager/:path*"
   ],
 };
