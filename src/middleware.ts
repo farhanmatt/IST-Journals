@@ -1,6 +1,11 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+const authSecret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  "ist-journals-auth-secret-key-production-neon-db-398471923";
+
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
@@ -51,6 +56,7 @@ export default withAuth(
     return response;
   },
   {
+    secret: authSecret,
     callbacks: {
       authorized: ({ token }) => !!token,
     },

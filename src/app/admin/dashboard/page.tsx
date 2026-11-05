@@ -9,33 +9,42 @@ export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
 
   // Fetch Summary Stats efficiently with groupBy
-  const [
-    totalUsers,
-    roleGroups,
-    submissionGroups,
-    recentSubmissions,
-    recentLogs
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.userRole.groupBy({
-      by: ["role"],
-      _count: { _all: true },
-    }),
-    prisma.submission.groupBy({
-      by: ["status"],
-      _count: { _all: true },
-    }),
-    prisma.submission.findMany({
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-      include: { author: true }
-    }),
-    prisma.auditLog.findMany({
-      take: 7,
-      orderBy: { createdAt: 'desc' },
-      include: { user: true }
-    })
-  ]);
+  let totalUsers = 0;
+  let roleGroups: { role: string; _count: { _all: number } }[] = [];
+  let submissionGroups: { status: string; _count: { _all: number } }[] = [];
+  let recentSubmissions: any[] = [];
+  let recentLogs: any[] = [];
+
+  try {
+    const res = await Promise.all([
+      prisma.user.count(),
+      prisma.userRole.groupBy({
+        by: ["role"],
+        _count: { _all: true },
+      }),
+      prisma.submission.groupBy({
+        by: ["status"],
+        _count: { _all: true },
+      }),
+      prisma.submission.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        include: { author: true }
+      }),
+      prisma.auditLog.findMany({
+        take: 7,
+        orderBy: { createdAt: 'desc' },
+        include: { user: true }
+      })
+    ]);
+    totalUsers = res[0] as number;
+    roleGroups = res[1] as any;
+    submissionGroups = res[2] as any;
+    recentSubmissions = res[3] as any;
+    recentLogs = res[4] as any;
+  } catch (dbErr) {
+    console.error("Database fetch error on admin dashboard:", dbErr);
+  }
 
   const rolesMap: Record<string, number> = {};
   for (const r of roleGroups) {
@@ -159,7 +168,7 @@ export default async function AdminDashboard() {
                       <tr key={sub.id} className="hover:bg-slate-50/80 transition-colors group">
                         <td className="px-6 py-3.5 text-xs font-mono font-bold text-slate-500">#{sub.submissionId || sub.id.substring(0,6)}</td>
                         <td className="px-6 py-3.5 text-xs sm:text-sm font-semibold text-slate-800 max-w-[220px] truncate group-hover:text-blue-600 transition-colors">{sub.title}</td>
-                        <td className="px-6 py-3.5 text-xs text-slate-500 font-medium whitespace-nowrap">{sub.author.name}</td>
+                        <td className="px-6 py-3.5 text-xs text-slate-500 font-medium whitespace-nowrap">{sub.author?.name || "Unknown Author"}</td>
                         <td className="px-6 py-3.5 text-xs whitespace-nowrap">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200/80 uppercase tracking-wider">
                             {sub.status.replace(/_/g, ' ')}

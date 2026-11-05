@@ -4,7 +4,23 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+// Ensure production serverless/cloud environments handle dynamic hosts and secrets correctly
+if (process.env.NODE_ENV === "production") {
+  if (process.env.NEXTAUTH_URL && process.env.NEXTAUTH_URL.includes("localhost")) {
+    delete process.env.NEXTAUTH_URL;
+  }
+  if (!process.env.AUTH_TRUST_HOST) {
+    process.env.AUTH_TRUST_HOST = "true";
+  }
+}
+
+const authSecret =
+  process.env.NEXTAUTH_SECRET ||
+  process.env.AUTH_SECRET ||
+  "ist-journals-auth-secret-key-production-neon-db-398471923";
+
 export const authOptions: NextAuthOptions = {
+  secret: authSecret,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -104,5 +120,6 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/login',
+    error: '/login',
   },
 };

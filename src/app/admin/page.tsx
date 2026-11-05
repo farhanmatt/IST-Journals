@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
       setError("Invalid administrator credentials. Please try again.");
       setIsLoading(false);
     } else {
-      router.push("/admin/dashboard"); 
+      window.location.href = "/admin/dashboard"; 
     }
   };
 
