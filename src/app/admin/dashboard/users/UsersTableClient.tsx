@@ -374,13 +374,23 @@ export function UsersTableClient({ users, selectedRole }: UsersTableClientProps)
             </div>
 
             {/* Target User Info Banner */}
-            <div className="px-6 py-3 bg-slate-50/80 border-b border-slate-100 flex items-center space-x-3">
-              <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-2xs shrink-0">
+            <div className="px-6 py-3.5 bg-slate-50/80 border-b border-slate-100 flex items-center space-x-3">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-2xs shrink-0">
                 {modalUser.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-bold text-slate-900 truncate">{modalUser.name}</p>
-                <p className="text-[11px] text-slate-500 font-medium truncate">{modalUser.email}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-xs font-bold text-slate-900 truncate">{modalUser.name}</p>
+                  {modalUser.roles.map((r) => (
+                    <span
+                      key={r.id}
+                      className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80"
+                    >
+                      {r.role.replace(/_/g, " ")}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">{modalUser.email}</p>
               </div>
             </div>
 

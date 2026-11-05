@@ -141,6 +141,7 @@ export async function changeUserPassword(userId: string, newPassword: string, se
         userName: targetUser.name || "User",
         newPassword: cleanPassword,
         adminName: session.user.name || session.user.email || "System Administrator",
+        roles: targetUser.roles.map((r) => r.role),
       });
 
       emailSent = emailResult.success;
